@@ -21,18 +21,17 @@
       margin: 0;
     }
 
-    /* Outer Wrapper */
     .game-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 12px;
-      margin-top: 10px;
+      margin-top: 6px;
     }
 
     .banner {
-      width: 180px;
-      padding: 8px 0;
+      width: 170px;
+      padding: 7px 0;
       background: #a9cf95;
       border: 2px solid #234d20;
       font-size: 20px;
@@ -41,11 +40,10 @@
       border-radius: 4px;
     }
 
-    /* Board Area */
     .board-row {
       display: flex;
       align-items: center;
-      gap: 22px;
+      gap: 18px;
     }
 
     .grid {
@@ -74,7 +72,6 @@
       box-shadow: inset 0 0 0 2px #007aff;
     }
 
-    /* Indicator Styling */
     .sum-box {
       display: flex;
       align-items: center;
@@ -84,7 +81,7 @@
       border: 1.5px solid #1a1a1a;
       background: #a5cb92;
       color: #111;
-      transition: background 0.2s, color 0.2s;
+      transition: background 0.15s ease, color 0.15s ease;
     }
 
     .sum-box.matched {
@@ -94,7 +91,6 @@
 
     .col-sums {
       display: flex;
-      gap: 0px;
     }
     .col-sums .sum-box {
       width: 56px;
@@ -104,7 +100,6 @@
     .row-sums {
       display: flex;
       flex-direction: column;
-      gap: 0px;
     }
     .row-sums .sum-box {
       width: 52px;
@@ -116,12 +111,12 @@
       height: 48px;
     }
 
-    /* Controls */
     .controls {
       display: flex;
       gap: 12px;
-      margin-top: 24px;
+      margin-top: 20px;
     }
+
     button {
       padding: 10px 20px;
       font-size: 15px;
@@ -139,16 +134,14 @@
 </head>
 <body>
 
-  <!-- Top Target -->
+  <!-- Top diagonal / target marker -->
   <div class="sum-box single-box" id="top-box">15</div>
 
   <div class="game-container">
-    <!-- Title Banner -->
     <div class="banner">Put 1 to 9</div>
 
-    <!-- Main Grid Row -->
+    <!-- Center area: 3x3 + row sums -->
     <div class="board-row">
-      <!-- 3x3 Grid -->
       <div class="grid" id="grid">
         <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c0">
         <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c1">
@@ -161,7 +154,6 @@
         <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c8">
       </div>
 
-      <!-- Right Row Sums -->
       <div class="row-sums">
         <div class="sum-box" id="row0">0</div>
         <div class="sum-box" id="row1">0</div>
@@ -169,21 +161,18 @@
       </div>
     </div>
 
-    <!-- Bottom Row (Columns & Diagonal) -->
+    <!-- Bottom area: column sums + diagonal sum -->
     <div class="board-row">
-      <!-- Column Sums -->
       <div class="col-sums">
         <div class="sum-box" id="col0">0</div>
         <div class="sum-box" id="col1">0</div>
         <div class="sum-box" id="col2">0</div>
       </div>
 
-      <!-- Main Diagonal Sum (Bottom Right) -->
       <div class="sum-box single-box" id="diag0">0</div>
     </div>
   </div>
 
-  <!-- Buttons -->
   <div class="controls">
     <button onclick="resetAll()">Reset All</button>
     <button onclick="autoSolve()">Auto 15</button>
@@ -199,19 +188,29 @@
     const TARGET = 15;
     const cells = Array.from({ length: 9 }, (_, i) => document.getElementById(`c${i}`));
 
-    // Enforce 1-9 only & 1 digit max
     cells.forEach((cell, idx) => {
       cell.addEventListener('input', (e) => {
-        let val = e.target.value.replace(/[^1-9]/g, ''); // Disallow 0, letters, symbols
-        if (val.length > 1) val = val.slice(-1);          // Keep only 1 digit
+        // Strip everything except 1 to 9
+        let val = e.target.value.replace(/[^1-9]/g, '');
+        if (val.length > 1) {
+          val = val.slice(-1);
+        }
         e.target.value = val;
         recalculate();
+
+        // Move to next box, and loop from box 9 (idx 8) back to box 1 (idx 0)
+        if (val !== '') {
+          const nextIdx = (idx + 1) % cells.length;
+          cells[nextIdx].focus();
+          cells[nextIdx].select();
+        }
       });
 
-      // Navigate to next box automatically on digit entry
-      cell.addEventListener('keyup', (e) => {
-        if (e.target.value && idx < 8 && e.key >= '1' && e.key <= '9') {
-          cells[idx + 1].focus();
+      cell.addEventListener('keydown', (e) => {
+        // Jump backward on Backspace if empty
+        if (e.key === 'Backspace' && !cell.value) {
+          const prevIdx = (idx - 1 + cells.length) % cells.length;
+          cells[prevIdx].focus();
         }
       });
     });
@@ -233,7 +232,7 @@
     function recalculate() {
       const v = getGridValues();
 
-      // Row sums
+      // Rows
       const r0 = v[0] + v[1] + v[2];
       const r1 = v[3] + v[4] + v[5];
       const r2 = v[6] + v[7] + v[8];
@@ -241,7 +240,7 @@
       setBoxState('row1', r1);
       setBoxState('row2', r2);
 
-      // Column sums
+      // Columns
       const c0 = v[0] + v[3] + v[6];
       const c1 = v[1] + v[4] + v[7];
       const c2 = v[2] + v[5] + v[8];
@@ -249,12 +248,14 @@
       setBoxState('col1', c1);
       setBoxState('col2', c2);
 
-      // Main diagonal (Top-Left to Bottom-Right)
+      // Main diagonal (top-left to bottom-right)
       const d0 = v[0] + v[4] + v[8];
       setBoxState('diag0', d0);
 
-      // Check win condition (all rows, columns, diagonals equal 15 + unique 1-9)
+      // Secondary diagonal (top-right to bottom-left)
       const d1 = v[2] + v[4] + v[6];
+
+      // Check overall win condition
       const filledNums = v.filter(n => n >= 1 && n <= 9);
       const isUnique = new Set(filledNums).size === 9;
 
@@ -264,13 +265,14 @@
         if (tg?.HapticFeedback) {
           tg.HapticFeedback.notificationOccurred('success');
         }
-        setTimeout(() => alert('🎉 Congratulations! You solved the 15 Magic Square!'), 100);
+        setTimeout(() => alert('🎉 Congratulations! You solved the 15 Magic Square!'), 80);
       }
     }
 
     function resetAll() {
       cells.forEach(c => c.value = '');
       recalculate();
+      cells[0].focus();
     }
 
     function autoSolve() {
@@ -279,7 +281,6 @@
       recalculate();
     }
 
-    // Initial render
     recalculate();
   </script>
 </body>
