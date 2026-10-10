@@ -2,180 +2,252 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Magic Square Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Magic Square Puzzle</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * {
       box-sizing: border-box;
       user-select: none;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #f7f9fa;
-      color: #111;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 16px;
-      margin: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .game-container {
+    body {
+      margin: 0;
+      padding: 20px 16px;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
-      margin-top: 6px;
+      justify-content: flex-start;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      background: radial-gradient(circle at 50% 15%, #1e2638 0%, #0d111a 100%);
+      color: #ffffff;
+    }
+
+    .game-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+    }
+
+    /* Target badge */
+    .target-badge {
+      width: 58px;
+      height: 48px;
+      background: #1e3a24;
+      border: 1.5px solid #34c759;
+      color: #34c759;
+      font-size: 22px;
+      font-weight: 800;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      box-shadow: 0 0 12px rgba(52, 199, 89, 0.2);
     }
 
     .banner {
-      width: 170px;
-      padding: 7px 0;
-      background: #a9cf95;
-      border: 2px solid #234d20;
-      font-size: 20px;
+      width: 190px;
+      padding: 8px 0;
+      background: linear-gradient(135deg, #2e4a30 0%, #1e3321 100%);
+      border: 1.5px solid #48bb78;
+      color: #9ae6b4;
+      font-size: 18px;
       font-weight: 800;
+      letter-spacing: 0.5px;
       text-align: center;
-      border-radius: 4px;
+      border-radius: 10px;
+      margin-bottom: 18px;
     }
 
-    .board-row {
+    .board-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .row-align {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 12px;
     }
 
+    /* 3x3 Input Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 56px);
-      grid-template-rows: repeat(3, 56px);
-      border: 2px solid #222;
-      background: #e2edd8;
+      grid-template-columns: repeat(3, 58px);
+      grid-gap: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
     .cell {
-      width: 56px;
-      height: 56px;
-      border: 1px solid #444;
-      background: #e4eedc;
-      font-size: 24px;
-      font-weight: bold;
+      width: 58px;
+      height: 58px;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 26px;
+      font-weight: 700;
       text-align: center;
+      color: #ffffff;
       outline: none;
-      color: #000;
+      caret-color: #34c759;
+      transition: all 0.15s ease;
       padding: 0;
     }
 
     .cell:focus {
-      background: #ffffff;
-      box-shadow: inset 0 0 0 2px #007aff;
+      background: rgba(52, 199, 89, 0.15);
+      border-color: #34c759;
+      box-shadow: 0 0 14px rgba(52, 199, 89, 0.4);
+      transform: scale(1.03);
     }
 
+    /* Sum indicators */
     .sum-box {
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 20px;
-      font-weight: bold;
-      border: 1.5px solid #1a1a1a;
-      background: #a5cb92;
-      color: #111;
-      transition: background 0.15s ease, color 0.15s ease;
+      font-weight: 800;
+      border-radius: 10px;
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      color: #8b9bb4;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    /* Matched sum (15) */
     .sum-box.matched {
-      background: #00a843;
-      color: #000;
-    }
-
-    .col-sums {
-      display: flex;
-    }
-    .col-sums .sum-box {
-      width: 56px;
-      height: 48px;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      border-color: #4ade80;
+      color: #ffffff;
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.5);
+      transform: scale(1.02);
     }
 
     .row-sums {
       display: flex;
       flex-direction: column;
+      gap: 6px;
     }
     .row-sums .sum-box {
-      width: 52px;
-      height: 56px;
+      width: 54px;
+      height: 58px;
     }
 
-    .single-box {
-      width: 52px;
-      height: 48px;
+    .col-sums {
+      display: flex;
+      gap: 6px;
+      margin-left: 6px;
+    }
+    .col-sums .sum-box {
+      width: 58px;
+      height: 52px;
     }
 
+    .corner-diag {
+      width: 54px;
+      height: 52px;
+    }
+
+    /* Action Buttons */
     .controls {
       display: flex;
-      gap: 12px;
-      margin-top: 20px;
+      gap: 14px;
+      margin-top: 24px;
+      width: 100%;
     }
 
     button {
-      padding: 10px 20px;
+      flex: 1;
+      padding: 13px 0;
       font-size: 15px;
-      font-weight: bold;
-      border-radius: 6px;
-      border: 1px solid #bbb;
-      background: #ffffff;
+      font-weight: 700;
+      border-radius: 12px;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.15s ease;
+      outline: none;
     }
-    button:active {
+
+    .btn-reset {
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    .btn-reset:active {
+      background: rgba(255, 255, 255, 0.15);
       transform: translateY(1px);
+    }
+
+    .btn-auto {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    }
+    .btn-auto:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
     }
   </style>
 </head>
 <body>
 
-  <!-- Top diagonal / target marker -->
-  <div class="sum-box single-box" id="top-box">15</div>
-
-  <div class="game-container">
+  <div class="game-card">
+    <div class="target-badge" id="top-box">15</div>
     <div class="banner">Put 1 to 9</div>
 
-    <!-- Center area: 3x3 + row sums -->
-    <div class="board-row">
-      <div class="grid" id="grid">
-        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c0">
-        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c1">
-        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c2">
-        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c3">
-        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c4">
-        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c5">
-        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c6">
-        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c7">
-        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c8">
+    <div class="board-layout">
+      <!-- 3x3 Grid and Right Row Totals -->
+      <div class="row-align">
+        <div class="grid" id="grid">
+          <input class="cell" type="text" inputmode="numeric" id="c0">
+          <input class="cell" type="text" inputmode="numeric" id="c1">
+          <input class="cell" type="text" inputmode="numeric" id="c2">
+          <input class="cell" type="text" inputmode="numeric" id="c3">
+          <input class="cell" type="text" inputmode="numeric" id="c4">
+          <input class="cell" type="text" inputmode="numeric" id="c5">
+          <input class="cell" type="text" inputmode="numeric" id="c6">
+          <input class="cell" type="text" inputmode="numeric" id="c7">
+          <input class="cell" type="text" inputmode="numeric" id="c8">
+        </div>
+
+        <div class="row-sums">
+          <div class="sum-box" id="row0">0</div>
+          <div class="sum-box" id="row1">0</div>
+          <div class="sum-box" id="row2">0</div>
+        </div>
       </div>
 
-      <div class="row-sums">
-        <div class="sum-box" id="row0">0</div>
-        <div class="sum-box" id="row1">0</div>
-        <div class="sum-box" id="row2">0</div>
+      <!-- Column Totals and Diagonal Total -->
+      <div class="row-align">
+        <div class="col-sums">
+          <div class="sum-box" id="col0">0</div>
+          <div class="sum-box" id="col1">0</div>
+          <div class="sum-box" id="col2">0</div>
+        </div>
+        <div class="sum-box corner-diag" id="diag0">0</div>
       </div>
     </div>
 
-    <!-- Bottom area: column sums + diagonal sum -->
-    <div class="board-row">
-      <div class="col-sums">
-        <div class="sum-box" id="col0">0</div>
-        <div class="sum-box" id="col1">0</div>
-        <div class="sum-box" id="col2">0</div>
-      </div>
-
-      <div class="sum-box single-box" id="diag0">0</div>
+    <!-- Buttons -->
+    <div class="controls">
+      <button class="btn-reset" onclick="resetAll()">Reset All</button>
+      <button class="btn-auto" onclick="autoSolve()">Auto 15</button>
     </div>
-  </div>
-
-  <div class="controls">
-    <button onclick="resetAll()">Reset All</button>
-    <button onclick="autoSolve()">Auto 15</button>
   </div>
 
   <script>
@@ -189,28 +261,44 @@
     const cells = Array.from({ length: 9 }, (_, i) => document.getElementById(`c${i}`));
 
     cells.forEach((cell, idx) => {
-      cell.addEventListener('input', (e) => {
-        // Strip everything except 1 to 9
-        let val = e.target.value.replace(/[^1-9]/g, '');
-        if (val.length > 1) {
-          val = val.slice(-1);
-        }
-        e.target.value = val;
-        recalculate();
+      // Auto-select text on tap so any new typed key replaces immediately
+      cell.addEventListener('focus', () => {
+        setTimeout(() => cell.select(), 10);
+      });
 
-        // Move to next box, and loop from box 9 (idx 8) back to box 1 (idx 0)
-        if (val !== '') {
-          const nextIdx = (idx + 1) % cells.length;
+      // Intercept key/touch input to force overwrite and move forward
+      cell.addEventListener('input', (e) => {
+        const raw = e.target.value;
+        const validMatch = raw.match(/[1-9]/g);
+
+        if (validMatch && validMatch.length > 0) {
+          // Take only the newest entered digit (replaces previous number)
+          const newDigit = validMatch[validMatch.length - 1];
+          e.target.value = newDigit;
+
+          recalculate();
+
+          // Loop forward: box 9 (idx 8) loops straight to box 1 (idx 0)
+          const nextIdx = (idx + 1) % 9;
           cells[nextIdx].focus();
           cells[nextIdx].select();
+        } else {
+          // Empty or zero entered
+          e.target.value = '';
+          recalculate();
         }
       });
 
+      // Handle Backspace deletion navigation backwards
       cell.addEventListener('keydown', (e) => {
-        // Jump backward on Backspace if empty
-        if (e.key === 'Backspace' && !cell.value) {
-          const prevIdx = (idx - 1 + cells.length) % cells.length;
-          cells[prevIdx].focus();
+        if (e.key === 'Backspace') {
+          if (!cell.value) {
+            e.preventDefault();
+            const prevIdx = (idx - 1 + 9) % 9;
+            cells[prevIdx].focus();
+            cells[prevIdx].value = '';
+            recalculate();
+          }
         }
       });
     });
@@ -232,7 +320,7 @@
     function recalculate() {
       const v = getGridValues();
 
-      // Rows
+      // Row sums
       const r0 = v[0] + v[1] + v[2];
       const r1 = v[3] + v[4] + v[5];
       const r2 = v[6] + v[7] + v[8];
@@ -240,7 +328,7 @@
       setBoxState('row1', r1);
       setBoxState('row2', r2);
 
-      // Columns
+      // Column sums
       const c0 = v[0] + v[3] + v[6];
       const c1 = v[1] + v[4] + v[7];
       const c2 = v[2] + v[5] + v[8];
@@ -248,14 +336,12 @@
       setBoxState('col1', c1);
       setBoxState('col2', c2);
 
-      // Main diagonal (top-left to bottom-right)
+      // Diagonal sums
       const d0 = v[0] + v[4] + v[8];
+      const d1 = v[2] + v[4] + v[6];
       setBoxState('diag0', d0);
 
-      // Secondary diagonal (top-right to bottom-left)
-      const d1 = v[2] + v[4] + v[6];
-
-      // Check overall win condition
+      // Check win condition
       const filledNums = v.filter(n => n >= 1 && n <= 9);
       const isUnique = new Set(filledNums).size === 9;
 
@@ -265,7 +351,7 @@
         if (tg?.HapticFeedback) {
           tg.HapticFeedback.notificationOccurred('success');
         }
-        setTimeout(() => alert('🎉 Congratulations! You solved the 15 Magic Square!'), 80);
+        setTimeout(() => alert('🎉 Solved successfully! Perfect Magic Square!'), 80);
       }
     }
 
