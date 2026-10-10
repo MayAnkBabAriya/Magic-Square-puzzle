@@ -14,7 +14,7 @@
 
     body {
       margin: 0;
-      padding: 16px 14px;
+      padding: 10px 12px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -27,8 +27,8 @@
     .game-card {
       background: #1a202c;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px;
-      padding: 20px 16px;
+      border-radius: 20px;
+      padding: 14px 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -37,45 +37,53 @@
       max-width: 345px;
     }
 
-    .target-badge {
-      width: 60px;
-      height: 48px;
-      background: #142e1d;
-      border: 1.5px solid #22c55e;
-      color: #22c55e;
-      font-size: 22px;
-      font-weight: 800;
-      border-radius: 12px;
+    /* Streamlined Title Badge */
+    .header-bar {
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 10px;
       margin-bottom: 12px;
-      box-shadow: 0 0 14px rgba(34, 197, 94, 0.25);
+      width: 100%;
     }
 
-    .banner {
-      width: 190px;
-      padding: 8px 0;
-      background: #1b3824;
+    .title-tag {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #94a3b8;
+    }
+
+    .target-pill {
+      background: #142e1d;
       border: 1.5px solid #22c55e;
-      color: #86efac;
+      color: #22c55e;
       font-size: 16px;
       font-weight: 800;
-      text-align: center;
-      border-radius: 10px;
-      margin-bottom: 18px;
+      padding: 3px 12px;
+      border-radius: 20px;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .target-pill span {
+      color: #86efac;
+      font-size: 12px;
+      font-weight: 600;
     }
 
     .board-layout {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .row-align {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .grid {
@@ -136,7 +144,7 @@
       gap: 6px;
     }
     .row-sums .sum-box {
-      width: 54px;
+      width: 52px;
       height: 56px;
     }
 
@@ -147,28 +155,29 @@
     }
     .col-sums .sum-box {
       width: 56px;
-      height: 50px;
+      height: 48px;
     }
 
     .corner-diag {
-      width: 54px;
-      height: 50px;
+      width: 52px;
+      height: 48px;
     }
 
-    /* Used/Pending numbers ribbon */
+    /* Numbers tracker */
     .hint-container {
-      margin-top: 14px;
+      margin-top: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       width: 100%;
     }
 
     .hint-label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       color: #94a3b8;
+      letter-spacing: 0.3px;
     }
 
     .num-palette {
@@ -178,13 +187,13 @@
     }
 
     .num-chip {
-      width: 28px;
-      height: 28px;
+      width: 27px;
+      height: 27px;
       border-radius: 6px;
       background: #252d3d;
       border: 1px solid #3b475d;
       color: #38bdf8;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -201,17 +210,17 @@
       pointer-events: none;
     }
 
-    /* Buttons */
+    /* Controls */
     .controls {
       display: flex;
-      gap: 12px;
-      margin-top: 16px;
+      gap: 10px;
+      margin-top: 14px;
       width: 100%;
     }
 
     button {
       flex: 1;
-      padding: 12px 0;
+      padding: 11px 0;
       font-size: 14px;
       font-weight: 700;
       border-radius: 10px;
@@ -242,8 +251,13 @@
 <body>
 
   <div class="game-card">
-    <div class="target-badge" id="top-box">15</div>
-    <div class="banner">Put 1 to 9</div>
+    <!-- Clean, compact header -->
+    <div class="header-bar">
+      <div class="title-tag">3 × 3 GRID</div>
+      <div class="target-pill">
+        <span>SUM</span> 15
+      </div>
+    </div>
 
     <div class="board-layout">
       <!-- 3x3 Grid and Row Totals -->
@@ -280,7 +294,7 @@
 
     <!-- Remaining Numbers Tracker -->
     <div class="hint-container">
-      <div class="hint-label">Available Numbers (1-9):</div>
+      <div class="hint-label">AVAILABLE NUMBERS:</div>
       <div class="num-palette">
         <div class="num-chip" data-num="1">1</div>
         <div class="num-chip" data-num="2">2</div>
@@ -326,13 +340,28 @@
       cell.addEventListener('keydown', (e) => {
         if (e.key === 'Backspace' && !cell.value) {
           e.preventDefault();
-          const prev = (idx - 1 + 9) % 9;
-          cells[prev].focus();
-          cells[prev].value = '';
-          recalculate();
+          findPreviousEmptyOrFilled(idx);
         }
       });
     });
+
+    function findNextEmptyCell(currentIdx) {
+      // Find the next empty cell, skipping all already-filled ones
+      for (let offset = 1; offset <= 9; offset++) {
+        const next = (currentIdx + offset) % 9;
+        if (!cells[next].value) {
+          return next;
+        }
+      }
+      return -1; // All cells are filled
+    }
+
+    function findPreviousEmptyOrFilled(currentIdx) {
+      const prev = (currentIdx - 1 + 9) % 9;
+      cells[prev].focus();
+      cells[prev].value = '';
+      recalculate();
+    }
 
     function handleDigit(idx, val) {
       const match = val.match(/[1-9]/g);
@@ -344,7 +373,7 @@
 
       const digit = match[match.length - 1];
 
-      // Auto-erase the number from any cell where it was already typed
+      // Remove duplicate if entered elsewhere
       cells.forEach((otherCell, otherIdx) => {
         if (otherIdx !== idx && otherCell.value === digit) {
           otherCell.value = '';
@@ -354,17 +383,20 @@
       cells[idx].value = digit;
       recalculate();
 
-      // Loop forward to next cell (wraps back to 1st cell on reaching the end)
-      const nextIdx = (idx + 1) % 9;
-      cells[nextIdx].focus();
-      cells[nextIdx].select();
+      // Skip filled boxes and navigate to the next empty box
+      const nextEmpty = findNextEmptyCell(idx);
+      if (nextEmpty !== -1) {
+        cells[nextEmpty].focus();
+        cells[nextEmpty].select();
+      }
     }
 
-    // Tapping a remaining number chip assigns it to current cell
+    // Tapping a remaining chip drops it into the active or next empty box
     chips.forEach(chip => {
       chip.addEventListener('click', () => {
         const num = chip.getAttribute('data-num');
-        handleDigit(activeIdx, num);
+        const targetCellIdx = cells[activeIdx].value ? (findNextEmptyCell(activeIdx) !== -1 ? findNextEmptyCell(activeIdx) : activeIdx) : activeIdx;
+        handleDigit(targetCellIdx, num);
       });
     });
 
@@ -406,7 +438,7 @@
       const d1 = v[2] + v[4] + v[6];
       setBoxState('diag0', d0);
 
-      // Update available numbers bar
+      // Update palette of remaining numbers
       const usedSet = new Set(v.filter(n => n >= 1 && n <= 9));
       chips.forEach(chip => {
         const num = parseInt(chip.getAttribute('data-num'), 10);
@@ -417,7 +449,7 @@
         }
       });
 
-      // Strict win condition: exactly 9 unique digits and all 8 lines equal 15
+      // Strict win condition
       if (usedSet.size === 9 &&
           r0 === 15 && r1 === 15 && r2 === 15 &&
           c0 === 15 && c1 === 15 && c2 === 15 &&
