@@ -14,56 +14,53 @@
 
     body {
       margin: 0;
-      padding: 20px 16px;
+      padding: 16px 14px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-      background: radial-gradient(circle at 50% 15%, #1e2638 0%, #0d111a 100%);
+      background: #0f131a;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #ffffff;
     }
 
     .game-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 20px;
+      background: #1a202c;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 20px 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+      width: 100%;
+      max-width: 345px;
     }
 
-    /* Target badge */
     .target-badge {
-      width: 58px;
+      width: 60px;
       height: 48px;
-      background: #1e3a24;
-      border: 1.5px solid #34c759;
-      color: #34c759;
+      background: #142e1d;
+      border: 1.5px solid #22c55e;
+      color: #22c55e;
       font-size: 22px;
       font-weight: 800;
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 10px;
-      box-shadow: 0 0 12px rgba(52, 199, 89, 0.2);
+      margin-bottom: 12px;
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.25);
     }
 
     .banner {
       width: 190px;
       padding: 8px 0;
-      background: linear-gradient(135deg, #2e4a30 0%, #1e3321 100%);
-      border: 1.5px solid #48bb78;
-      color: #9ae6b4;
-      font-size: 18px;
+      background: #1b3824;
+      border: 1.5px solid #22c55e;
+      color: #86efac;
+      font-size: 16px;
       font-weight: 800;
-      letter-spacing: 0.5px;
       text-align: center;
       border-radius: 10px;
       margin-bottom: 18px;
@@ -78,64 +75,59 @@
     .row-align {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    /* 3x3 Input Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 58px);
+      grid-template-columns: repeat(3, 56px);
       grid-gap: 6px;
-      background: rgba(0, 0, 0, 0.3);
+      background: #12161f;
       padding: 6px;
       border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .cell {
-      width: 58px;
-      height: 58px;
-      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      width: 56px;
+      height: 56px;
+      border: 1.5px solid #2d3748;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.08);
-      font-size: 26px;
-      font-weight: 700;
+      background: #252d3d;
+      font-size: 24px;
+      font-weight: 800;
       text-align: center;
       color: #ffffff;
       outline: none;
-      caret-color: #34c759;
-      transition: all 0.15s ease;
+      caret-color: #22c55e;
       padding: 0;
+      transition: all 0.15s ease;
     }
 
     .cell:focus {
-      background: rgba(52, 199, 89, 0.15);
-      border-color: #34c759;
-      box-shadow: 0 0 14px rgba(52, 199, 89, 0.4);
-      transform: scale(1.03);
+      background: #2b3547;
+      border-color: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.35);
     }
 
-    /* Sum indicators */
     .sum-box {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 800;
       border-radius: 10px;
-      border: 1.5px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.06);
-      color: #8b9bb4;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1.5px solid rgba(255, 255, 255, 0.06);
+      background: #252d3d;
+      color: #718096;
+      transition: all 0.2s ease;
     }
 
-    /* Matched sum (15) */
     .sum-box.matched {
-      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      background: #16a34a;
       border-color: #4ade80;
       color: #ffffff;
-      box-shadow: 0 0 16px rgba(34, 197, 94, 0.5);
-      transform: scale(1.02);
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.45);
     }
 
     .row-sums {
@@ -145,7 +137,7 @@
     }
     .row-sums .sum-box {
       width: 54px;
-      height: 58px;
+      height: 56px;
     }
 
     .col-sums {
@@ -154,53 +146,96 @@
       margin-left: 6px;
     }
     .col-sums .sum-box {
-      width: 58px;
-      height: 52px;
+      width: 56px;
+      height: 50px;
     }
 
     .corner-diag {
       width: 54px;
-      height: 52px;
+      height: 50px;
     }
 
-    /* Action Buttons */
+    /* Used/Pending numbers ribbon */
+    .hint-container {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .hint-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    .num-palette {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+    }
+
+    .num-chip {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: #252d3d;
+      border: 1px solid #3b475d;
+      color: #38bdf8;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .num-chip.used {
+      background: transparent;
+      border-color: transparent;
+      color: #4b5563;
+      text-decoration: line-through;
+      pointer-events: none;
+    }
+
+    /* Buttons */
     .controls {
       display: flex;
-      gap: 14px;
-      margin-top: 24px;
+      gap: 12px;
+      margin-top: 16px;
       width: 100%;
     }
 
     button {
       flex: 1;
-      padding: 13px 0;
-      font-size: 15px;
+      padding: 12px 0;
+      font-size: 14px;
       font-weight: 700;
-      border-radius: 12px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: all 0.15s ease;
       outline: none;
     }
 
     .btn-reset {
-      background: rgba(255, 255, 255, 0.08);
+      background: #252d3d;
       color: #e2e8f0;
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .btn-reset:active {
-      background: rgba(255, 255, 255, 0.15);
-      transform: translateY(1px);
+      background: #2f394d;
     }
 
     .btn-auto {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      background: #16a34a;
       color: #ffffff;
       border: none;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
     }
     .btn-auto:active {
       transform: translateY(1px);
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
     }
   </style>
 </head>
@@ -211,7 +246,7 @@
     <div class="banner">Put 1 to 9</div>
 
     <div class="board-layout">
-      <!-- 3x3 Grid and Right Row Totals -->
+      <!-- 3x3 Grid and Row Totals -->
       <div class="row-align">
         <div class="grid" id="grid">
           <input class="cell" type="text" inputmode="numeric" id="c0">
@@ -243,6 +278,22 @@
       </div>
     </div>
 
+    <!-- Remaining Numbers Tracker -->
+    <div class="hint-container">
+      <div class="hint-label">Available Numbers (1-9):</div>
+      <div class="num-palette">
+        <div class="num-chip" data-num="1">1</div>
+        <div class="num-chip" data-num="2">2</div>
+        <div class="num-chip" data-num="3">3</div>
+        <div class="num-chip" data-num="4">4</div>
+        <div class="num-chip" data-num="5">5</div>
+        <div class="num-chip" data-num="6">6</div>
+        <div class="num-chip" data-num="7">7</div>
+        <div class="num-chip" data-num="8">8</div>
+        <div class="num-chip" data-num="9">9</div>
+      </div>
+    </div>
+
     <!-- Buttons -->
     <div class="controls">
       <button class="btn-reset" onclick="resetAll()">Reset All</button>
@@ -259,51 +310,65 @@
 
     const TARGET = 15;
     const cells = Array.from({ length: 9 }, (_, i) => document.getElementById(`c${i}`));
+    const chips = Array.from(document.querySelectorAll('.num-chip'));
+    let activeIdx = 0;
 
     cells.forEach((cell, idx) => {
-      // Auto-select text on tap so any new typed key replaces immediately
       cell.addEventListener('focus', () => {
+        activeIdx = idx;
         setTimeout(() => cell.select(), 10);
       });
 
-      // Intercept key/touch input to force overwrite and move forward
       cell.addEventListener('input', (e) => {
-        const raw = e.target.value;
-        const validMatch = raw.match(/[1-9]/g);
-
-        if (validMatch && validMatch.length > 0) {
-          // Take only the newest entered digit (replaces previous number)
-          const newDigit = validMatch[validMatch.length - 1];
-          e.target.value = newDigit;
-
-          recalculate();
-
-          // Loop forward: box 9 (idx 8) loops straight to box 1 (idx 0)
-          const nextIdx = (idx + 1) % 9;
-          cells[nextIdx].focus();
-          cells[nextIdx].select();
-        } else {
-          // Empty or zero entered
-          e.target.value = '';
-          recalculate();
-        }
+        handleDigit(idx, e.target.value);
       });
 
-      // Handle Backspace deletion navigation backwards
       cell.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace') {
-          if (!cell.value) {
-            e.preventDefault();
-            const prevIdx = (idx - 1 + 9) % 9;
-            cells[prevIdx].focus();
-            cells[prevIdx].value = '';
-            recalculate();
-          }
+        if (e.key === 'Backspace' && !cell.value) {
+          e.preventDefault();
+          const prev = (idx - 1 + 9) % 9;
+          cells[prev].focus();
+          cells[prev].value = '';
+          recalculate();
         }
       });
     });
 
-    function getGridValues() {
+    function handleDigit(idx, val) {
+      const match = val.match(/[1-9]/g);
+      if (!match || match.length === 0) {
+        cells[idx].value = '';
+        recalculate();
+        return;
+      }
+
+      const digit = match[match.length - 1];
+
+      // Auto-erase the number from any cell where it was already typed
+      cells.forEach((otherCell, otherIdx) => {
+        if (otherIdx !== idx && otherCell.value === digit) {
+          otherCell.value = '';
+        }
+      });
+
+      cells[idx].value = digit;
+      recalculate();
+
+      // Loop forward to next cell (wraps back to 1st cell on reaching the end)
+      const nextIdx = (idx + 1) % 9;
+      cells[nextIdx].focus();
+      cells[nextIdx].select();
+    }
+
+    // Tapping a remaining number chip assigns it to current cell
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const num = chip.getAttribute('data-num');
+        handleDigit(activeIdx, num);
+      });
+    });
+
+    function getValues() {
       return cells.map(c => parseInt(c.value, 10) || 0);
     }
 
@@ -318,9 +383,9 @@
     }
 
     function recalculate() {
-      const v = getGridValues();
+      const v = getValues();
 
-      // Row sums
+      // Rows
       const r0 = v[0] + v[1] + v[2];
       const r1 = v[3] + v[4] + v[5];
       const r2 = v[6] + v[7] + v[8];
@@ -328,7 +393,7 @@
       setBoxState('row1', r1);
       setBoxState('row2', r2);
 
-      // Column sums
+      // Columns
       const c0 = v[0] + v[3] + v[6];
       const c1 = v[1] + v[4] + v[7];
       const c2 = v[2] + v[5] + v[8];
@@ -336,22 +401,31 @@
       setBoxState('col1', c1);
       setBoxState('col2', c2);
 
-      // Diagonal sums
+      // Diagonals
       const d0 = v[0] + v[4] + v[8];
       const d1 = v[2] + v[4] + v[6];
       setBoxState('diag0', d0);
 
-      // Check win condition
-      const filledNums = v.filter(n => n >= 1 && n <= 9);
-      const isUnique = new Set(filledNums).size === 9;
+      // Update available numbers bar
+      const usedSet = new Set(v.filter(n => n >= 1 && n <= 9));
+      chips.forEach(chip => {
+        const num = parseInt(chip.getAttribute('data-num'), 10);
+        if (usedSet.has(num)) {
+          chip.classList.add('used');
+        } else {
+          chip.classList.remove('used');
+        }
+      });
 
-      if (r0 === 15 && r1 === 15 && r2 === 15 &&
+      // Strict win condition: exactly 9 unique digits and all 8 lines equal 15
+      if (usedSet.size === 9 &&
+          r0 === 15 && r1 === 15 && r2 === 15 &&
           c0 === 15 && c1 === 15 && c2 === 15 &&
-          d0 === 15 && d1 === 15 && isUnique) {
+          d0 === 15 && d1 === 15) {
         if (tg?.HapticFeedback) {
           tg.HapticFeedback.notificationOccurred('success');
         }
-        setTimeout(() => alert('🎉 Solved successfully! Perfect Magic Square!'), 80);
+        setTimeout(() => alert('🎉 Congratulations! You solved the 15 Magic Square!'), 80);
       }
     }
 
