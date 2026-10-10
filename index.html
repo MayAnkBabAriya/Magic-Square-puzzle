@@ -3,166 +3,284 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Magic Square Telegram Mini App</title>
+  <title>Magic Square Game</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    :root {
-      --bg: #1c1c1e;
-      --card-bg: #2c2c2e;
-      --text: #ffffff;
-      --accent: #34c759;
-      --cell-bg: #3a3a3c;
+    * {
+      box-sizing: border-box;
+      user-select: none;
     }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f7f9fa;
+      color: #111;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 0;
       padding: 16px;
+      margin: 0;
     }
-    h2 { margin: 8px 0; }
-    .status { margin-bottom: 12px; font-size: 14px; opacity: 0.8; }
+
+    /* Outer Wrapper */
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .banner {
+      width: 180px;
+      padding: 8px 0;
+      background: #a9cf95;
+      border: 2px solid #234d20;
+      font-size: 20px;
+      font-weight: 800;
+      text-align: center;
+      border-radius: 4px;
+    }
+
+    /* Board Area */
+    .board-row {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 70px);
-      grid-gap: 10px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(3, 56px);
+      grid-template-rows: repeat(3, 56px);
+      border: 2px solid #222;
+      background: #e2edd8;
     }
+
     .cell {
-      width: 70px;
-      height: 70px;
-      background: var(--cell-bg);
-      border: 2px solid #555;
-      border-radius: 8px;
-      color: #fff;
+      width: 56px;
+      height: 56px;
+      border: 1px solid #444;
+      background: #e4eedc;
       font-size: 24px;
       font-weight: bold;
       text-align: center;
       outline: none;
+      color: #000;
+      padding: 0;
     }
-    .cell:focus { border-color: var(--accent); }
-    .sums {
+
+    .cell:focus {
+      background: #ffffff;
+      box-shadow: inset 0 0 0 2px #007aff;
+    }
+
+    /* Indicator Styling */
+    .sum-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      border: 1.5px solid #1a1a1a;
+      background: #a5cb92;
+      color: #111;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .sum-box.matched {
+      background: #00a843;
+      color: #000;
+    }
+
+    .col-sums {
+      display: flex;
+      gap: 0px;
+    }
+    .col-sums .sum-box {
+      width: 56px;
+      height: 48px;
+    }
+
+    .row-sums {
+      display: flex;
+      flex-direction: column;
+      gap: 0px;
+    }
+    .row-sums .sum-box {
+      width: 52px;
+      height: 56px;
+    }
+
+    .single-box {
+      width: 52px;
+      height: 48px;
+    }
+
+    /* Controls */
+    .controls {
       display: flex;
       gap: 12px;
-      font-size: 15px;
-      margin-bottom: 16px;
+      margin-top: 24px;
     }
-    .sum-indicator {
-      padding: 6px 10px;
-      border-radius: 6px;
-      background: #444;
-    }
-    .sum-indicator.valid { background: var(--accent); color: #000; font-weight: bold; }
-    .btn-container { display: flex; gap: 10px; }
     button {
-      padding: 10px 18px;
+      padding: 10px 20px;
       font-size: 15px;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
+      font-weight: bold;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      background: #ffffff;
       cursor: pointer;
-      background: #007aff;
-      color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    button.secondary { background: #555; }
+    button:active {
+      transform: translateY(1px);
+    }
   </style>
 </head>
 <body>
-  <h2>Magic Square (3x3)</h2>
-  <div class="status">Fill numbers 1 to 9. Every row, col & diag must equal 15.</div>
 
-  <div class="grid" id="grid"></div>
+  <!-- Top Target -->
+  <div class="sum-box single-box" id="top-box">15</div>
 
-  <div class="sums" id="status-bar">
-    <div id="row-status" class="sum-indicator">Rows: 0/3</div>
-    <div id="col-status" class="sum-indicator">Cols: 0/3</div>
-    <div id="diag-status" class="sum-indicator">Diags: 0/2</div>
+  <div class="game-container">
+    <!-- Title Banner -->
+    <div class="banner">Put 1 to 9</div>
+
+    <!-- Main Grid Row -->
+    <div class="board-row">
+      <!-- 3x3 Grid -->
+      <div class="grid" id="grid">
+        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c0">
+        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c1">
+        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c2">
+        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c3">
+        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c4">
+        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c5">
+        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c6">
+        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c7">
+        <input class="cell" type="text" inputmode="numeric" maxlength="1" id="c8">
+      </div>
+
+      <!-- Right Row Sums -->
+      <div class="row-sums">
+        <div class="sum-box" id="row0">0</div>
+        <div class="sum-box" id="row1">0</div>
+        <div class="sum-box" id="row2">0</div>
+      </div>
+    </div>
+
+    <!-- Bottom Row (Columns & Diagonal) -->
+    <div class="board-row">
+      <!-- Column Sums -->
+      <div class="col-sums">
+        <div class="sum-box" id="col0">0</div>
+        <div class="sum-box" id="col1">0</div>
+        <div class="sum-box" id="col2">0</div>
+      </div>
+
+      <!-- Main Diagonal Sum (Bottom Right) -->
+      <div class="sum-box single-box" id="diag0">0</div>
+    </div>
   </div>
 
-  <div class="btn-container">
-    <button class="secondary" onclick="resetBoard()">Reset</button>
-    <button onclick="autoSolve()">Auto Solve</button>
+  <!-- Buttons -->
+  <div class="controls">
+    <button onclick="resetAll()">Reset All</button>
+    <button onclick="autoSolve()">Auto 15</button>
   </div>
 
   <script>
     const tg = window.Telegram?.WebApp;
-    if (tg) { tg.ready(); tg.expand(); }
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
 
-    const N = 3;
     const TARGET = 15;
-    const gridEl = document.getElementById('grid');
+    const cells = Array.from({ length: 9 }, (_, i) => document.getElementById(`c${i}`));
 
-    // Generate 3x3 inputs
-    for (let i = 0; i < N * N; i++) {
-      const input = document.createElement('input');
-      input.type = 'number';
-      input.className = 'cell';
-      input.min = '1';
-      input.max = '9';
-      input.id = `c_${i}`;
-      input.addEventListener('input', checkBoard);
-      gridEl.appendChild(input);
+    // Enforce 1-9 only & 1 digit max
+    cells.forEach((cell, idx) => {
+      cell.addEventListener('input', (e) => {
+        let val = e.target.value.replace(/[^1-9]/g, ''); // Disallow 0, letters, symbols
+        if (val.length > 1) val = val.slice(-1);          // Keep only 1 digit
+        e.target.value = val;
+        recalculate();
+      });
+
+      // Navigate to next box automatically on digit entry
+      cell.addEventListener('keyup', (e) => {
+        if (e.target.value && idx < 8 && e.key >= '1' && e.key <= '9') {
+          cells[idx + 1].focus();
+        }
+      });
+    });
+
+    function getGridValues() {
+      return cells.map(c => parseInt(c.value, 10) || 0);
     }
 
-    function getValues() {
-      const vals = [];
-      for (let i = 0; i < N * N; i++) {
-        const val = parseInt(document.getElementById(`c_${i}`).value, 10);
-        vals.push(isNaN(val) ? 0 : val);
-      }
-      return vals;
-    }
-
-    function checkBoard() {
-      const b = getValues();
-      let validRows = 0, validCols = 0, validDiags = 0;
-
-      // Rows
-      for (let r = 0; r < 3; r++) {
-        if (b[r*3] + b[r*3+1] + b[r*3+2] === TARGET) validRows++;
-      }
-      // Cols
-      for (let c = 0; c < 3; c++) {
-        if (b[c] + b[c+3] + b[c+6] === TARGET) validCols++;
-      }
-      // Diagonals
-      if (b[0] + b[4] + b[8] === TARGET) validDiags++;
-      if (b[2] + b[4] + b[6] === TARGET) validDiags++;
-
-      updateIndicator('row-status', `Rows: ${validRows}/3`, validRows === 3);
-      updateIndicator('col-status', `Cols: ${validCols}/3`, validCols === 3);
-      updateIndicator('diag-status', `Diags: ${validDiags}/2`, validDiags === 2);
-
-      // Check unique 1 to 9
-      const unique = new Set(b.filter(v => v >= 1 && v <= 9));
-      if (validRows === 3 && validCols === 3 && validDiags === 2 && unique.size === 9) {
-        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        setTimeout(() => alert('🎉 Solved successfully!'), 50);
-      }
-    }
-
-    function updateIndicator(id, text, isValid) {
+    function setBoxState(id, sum) {
       const el = document.getElementById(id);
-      el.textContent = text;
-      el.classList.toggle('valid', isValid);
+      el.textContent = sum;
+      if (sum === TARGET) {
+        el.classList.add('matched');
+      } else {
+        el.classList.remove('matched');
+      }
     }
 
-    function resetBoard() {
-      for (let i = 0; i < 9; i++) document.getElementById(`c_${i}`).value = '';
-      checkBoard();
+    function recalculate() {
+      const v = getGridValues();
+
+      // Row sums
+      const r0 = v[0] + v[1] + v[2];
+      const r1 = v[3] + v[4] + v[5];
+      const r2 = v[6] + v[7] + v[8];
+      setBoxState('row0', r0);
+      setBoxState('row1', r1);
+      setBoxState('row2', r2);
+
+      // Column sums
+      const c0 = v[0] + v[3] + v[6];
+      const c1 = v[1] + v[4] + v[7];
+      const c2 = v[2] + v[5] + v[8];
+      setBoxState('col0', c0);
+      setBoxState('col1', c1);
+      setBoxState('col2', c2);
+
+      // Main diagonal (Top-Left to Bottom-Right)
+      const d0 = v[0] + v[4] + v[8];
+      setBoxState('diag0', d0);
+
+      // Check win condition (all rows, columns, diagonals equal 15 + unique 1-9)
+      const d1 = v[2] + v[4] + v[6];
+      const filledNums = v.filter(n => n >= 1 && n <= 9);
+      const isUnique = new Set(filledNums).size === 9;
+
+      if (r0 === 15 && r1 === 15 && r2 === 15 &&
+          c0 === 15 && c1 === 15 && c2 === 15 &&
+          d0 === 15 && d1 === 15 && isUnique) {
+        if (tg?.HapticFeedback) {
+          tg.HapticFeedback.notificationOccurred('success');
+        }
+        setTimeout(() => alert('🎉 Congratulations! You solved the 15 Magic Square!'), 100);
+      }
+    }
+
+    function resetAll() {
+      cells.forEach(c => c.value = '');
+      recalculate();
     }
 
     function autoSolve() {
-      // Standard Siamese 3x3 Magic Square solution
       const solution = [8, 1, 6, 3, 5, 7, 4, 9, 2];
-      solution.forEach((v, idx) => {
-        document.getElementById(`c_${idx}`).value = v;
-      });
-      checkBoard();
+      solution.forEach((val, i) => cells[i].value = val);
+      recalculate();
     }
+
+    // Initial render
+    recalculate();
   </script>
 </body>
 </html>
