@@ -14,83 +14,53 @@
 
     body {
       margin: 0;
-      padding: calc(10px + env(safe-area-inset-top, 0px)) 12px calc(14px + env(safe-area-inset-bottom, 0px)) 12px;
+      padding: calc(8px + env(safe-area-inset-top, 0px)) 
+               calc(14px + env(safe-area-inset-right, 0px)) 
+               calc(8px + env(safe-area-inset-bottom, 0px)) 
+               calc(14px + env(safe-area-inset-left, 0px));
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       background: #0f131a;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #ffffff;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
+    /* Wide horizontal layout */
     .game-card {
       background: #1a202c;
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 20px;
-      padding: 16px 14px;
+      padding: 14px 20px;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
-      width: 100%;
-      max-width: 345px;
-    }
-
-    /* Streamlined Title Badge */
-    .header-bar {
-      display: flex;
+      flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 12px;
+      gap: 24px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
       width: 100%;
+      max-width: 620px;
     }
 
-    .title-tag {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: #94a3b8;
-    }
-
-    .target-pill {
-      background: #142e1d;
-      border: 1.5px solid #22c55e;
-      color: #22c55e;
-      font-size: 16px;
-      font-weight: 800;
-      padding: 3px 12px;
-      border-radius: 20px;
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .target-pill span {
-      color: #86efac;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .board-layout {
+    /* Left Side: Game Board */
+    .board-side {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      align-items: center;
+      gap: 6px;
     }
 
     .row-align {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 56px);
+      grid-template-columns: repeat(3, 58px);
       grid-gap: 6px;
       background: #12161f;
       padding: 6px;
@@ -99,12 +69,12 @@
     }
 
     .cell {
-      width: 56px;
-      height: 56px;
+      width: 58px;
+      height: 58px;
       border: 1.5px solid #2d3748;
       border-radius: 10px;
       background: #252d3d;
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 800;
       text-align: center;
       color: #ffffff;
@@ -147,7 +117,7 @@
     }
     .row-sums .sum-box {
       width: 52px;
-      height: 56px;
+      height: 58px;
     }
 
     .col-sums {
@@ -156,7 +126,7 @@
       margin-left: 6px;
     }
     .col-sums .sum-box {
-      width: 56px;
+      width: 58px;
       height: 48px;
     }
 
@@ -165,37 +135,81 @@
       height: 48px;
     }
 
-    /* Numbers tracker */
+    /* Right Side: Header, Palette, & Buttons */
+    .controls-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .title-tag {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #94a3b8;
+    }
+
+    .target-pill {
+      background: #142e1d;
+      border: 1.5px solid #22c55e;
+      color: #22c55e;
+      font-size: 15px;
+      font-weight: 800;
+      padding: 3px 12px;
+      border-radius: 20px;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .target-pill span {
+      color: #86efac;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
     .hint-container {
-      margin-top: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       width: 100%;
     }
 
     .hint-label {
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       color: #94a3b8;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
     }
 
     .num-palette {
-      display: flex;
-      gap: 5px;
+      display: grid;
+      grid-template-columns: repeat(5, 34px);
+      gap: 6px;
       justify-content: center;
     }
 
     .num-chip {
-      width: 27px;
-      height: 27px;
-      border-radius: 6px;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
       background: #252d3d;
       border: 1px solid #3b475d;
       color: #38bdf8;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -212,18 +226,16 @@
       pointer-events: none;
     }
 
-    /* Controls */
     .controls {
       display: flex;
       gap: 10px;
-      margin-top: 14px;
       width: 100%;
     }
 
     button {
       flex: 1;
-      padding: 11px 0;
-      font-size: 14px;
+      padding: 10px 0;
+      font-size: 13px;
       font-weight: 700;
       border-radius: 10px;
       cursor: pointer;
@@ -253,16 +265,8 @@
 <body>
 
   <div class="game-card">
-    <!-- Header -->
-    <div class="header-bar">
-      <div class="title-tag">3 × 3 GRID</div>
-      <div class="target-pill">
-        <span>SUM</span> 15
-      </div>
-    </div>
-
-    <div class="board-layout">
-      <!-- 3x3 Grid and Row Totals -->
+    <!-- Left Column: Grid and Sum boxes -->
+    <div class="board-side">
       <div class="row-align">
         <div class="grid" id="grid">
           <input class="cell" type="text" inputmode="numeric" id="c0">
@@ -283,7 +287,6 @@
         </div>
       </div>
 
-      <!-- Column Totals and Diagonal Total -->
       <div class="row-align">
         <div class="col-sums">
           <div class="sum-box" id="col0">0</div>
@@ -294,66 +297,71 @@
       </div>
     </div>
 
-    <!-- Remaining Numbers Tracker -->
-    <div class="hint-container">
-      <div class="hint-label">AVAILABLE NUMBERS:</div>
-      <div class="num-palette">
-        <div class="num-chip" data-num="1">1</div>
-        <div class="num-chip" data-num="2">2</div>
-        <div class="num-chip" data-num="3">3</div>
-        <div class="num-chip" data-num="4">4</div>
-        <div class="num-chip" data-num="5">5</div>
-        <div class="num-chip" data-num="6">6</div>
-        <div class="num-chip" data-num="7">7</div>
-        <div class="num-chip" data-num="8">8</div>
-        <div class="num-chip" data-num="9">9</div>
+    <!-- Right Column: Info, Palette, & Buttons -->
+    <div class="controls-side">
+      <div class="header-bar">
+        <div class="title-tag">MAGIC SQUARE</div>
+        <div class="target-pill">
+          <span>SUM</span> 15
+        </div>
       </div>
-    </div>
 
-    <!-- Controls -->
-    <div class="controls">
-      <button class="btn-reset" onclick="resetAll()">Reset All</button>
-      <button class="btn-auto" onclick="autoSolve()">Auto 15</button>
+      <div class="hint-container">
+        <div class="hint-label">TAP TO PLACE:</div>
+        <div class="num-palette">
+          <div class="num-chip" data-num="1">1</div>
+          <div class="num-chip" data-num="2">2</div>
+          <div class="num-chip" data-num="3">3</div>
+          <div class="num-chip" data-num="4">4</div>
+          <div class="num-chip" data-num="5">5</div>
+          <div class="num-chip" data-num="6">6</div>
+          <div class="num-chip" data-num="7">7</div>
+          <div class="num-chip" data-num="8">8</div>
+          <div class="num-chip" data-num="9">9</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn-reset" onclick="resetAll()">Reset</button>
+        <button class="btn-auto" onclick="autoSolve()">Auto 15</button>
+      </div>
     </div>
   </div>
 
   <script>
     const tg = window.Telegram?.WebApp;
 
-    // Initialize Telegram Mini App Features
     function initTelegramFeatures() {
       if (!tg) return;
 
       tg.ready();
       tg.expand();
 
-      // Prevent accidental pull-to-close gestures during taps
       if (typeof tg.disableVerticalSwipes === 'function') {
         tg.disableVerticalSwipes();
       }
 
-      // Enter Fullscreen
       if (typeof tg.requestFullscreen === 'function' && !tg.isFullscreen) {
         tg.requestFullscreen();
       }
 
-      // Lock Portrait Orientation
+      // Enforce Landscape Orientation
       if (typeof tg.lockOrientation === 'function') {
-        tg.lockOrientation('portrait');
+        tg.lockOrientation('landscape');
       }
     }
 
-    // Run on startup
     initTelegramFeatures();
 
-    // Re-attempt fullscreen on first touch gesture if browser/client deferred it
     document.addEventListener('pointerdown', () => {
       if (tg && typeof tg.requestFullscreen === 'function' && !tg.isFullscreen) {
         tg.requestFullscreen();
       }
+      if (tg && typeof tg.lockOrientation === 'function') {
+        tg.lockOrientation('landscape');
+      }
     }, { once: true });
 
-    // Helper for safe haptic feedback execution
     function triggerHaptic(type = 'impact', style = 'light') {
       if (!tg?.HapticFeedback) return;
       try {
@@ -365,7 +373,7 @@
           tg.HapticFeedback.selectionChanged();
         }
       } catch (err) {
-        console.warn('Haptics unavailable:', err);
+        console.warn('Haptics error:', err);
       }
     }
 
@@ -422,7 +430,6 @@
 
       const digit = match[match.length - 1];
 
-      // Remove duplicate if entered elsewhere
       cells.forEach((otherCell, otherIdx) => {
         if (otherIdx !== idx && otherCell.value === digit) {
           otherCell.value = '';
@@ -433,7 +440,6 @@
       triggerHaptic('impact', 'light');
       recalculate();
 
-      // Skip filled boxes and navigate to the next empty box
       const nextEmpty = findNextEmptyCell(idx);
       if (nextEmpty !== -1) {
         cells[nextEmpty].focus();
@@ -441,7 +447,6 @@
       }
     }
 
-    // Tapping a remaining chip drops it into the active or next empty box
     chips.forEach(chip => {
       chip.addEventListener('click', () => {
         const num = chip.getAttribute('data-num');
@@ -489,7 +494,7 @@
       const d1 = v[2] + v[4] + v[6];
       setBoxState('diag0', d0);
 
-      // Update palette of remaining numbers
+      // Palette tracking
       const usedSet = new Set(v.filter(n => n >= 1 && n <= 9));
       chips.forEach(chip => {
         const num = parseInt(chip.getAttribute('data-num'), 10);
