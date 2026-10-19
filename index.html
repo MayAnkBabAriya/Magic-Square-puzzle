@@ -9,6 +9,7 @@
     * {
       box-sizing: border-box;
       user-select: none;
+      -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -22,6 +23,7 @@
       background: #0f131a;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #ffffff;
+      overflow-x: hidden;
     }
 
     .game-card {
@@ -46,12 +48,12 @@
       gap: 4px;
       margin-bottom: 12px;
       width: 100%;
-      max-width: 220px;
+      max-width: 230px;
     }
 
     .mode-btn {
       flex: 1;
-      padding: 6px 0;
+      padding: 7px 0;
       font-size: 13px;
       font-weight: 700;
       border: none;
@@ -75,7 +77,7 @@
       justify-content: space-between;
       width: 100%;
       padding: 0 4px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .title-tag {
@@ -129,47 +131,47 @@
 
     /* Dynamic sizing for 3x3 and 5x5 */
     .grid.grid-3 {
-      grid-template-columns: repeat(3, 54px);
+      grid-template-columns: repeat(3, 56px);
     }
     .grid.grid-3 .cell {
-      width: 54px;
-      height: 54px;
+      width: 56px;
+      height: 56px;
       font-size: 24px;
     }
 
     .grid.grid-5 {
-      grid-template-columns: repeat(5, 42px);
+      grid-template-columns: repeat(5, 44px);
     }
     .grid.grid-5 .cell {
-      width: 42px;
-      height: 42px;
-      font-size: 17px;
+      width: 44px;
+      height: 44px;
+      font-size: 18px;
     }
 
+    /* Non-input custom cells */
     .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border: 1.5px solid #2d3748;
       border-radius: 8px;
       background: #252d3d;
       font-weight: 800;
-      text-align: center;
       color: #ffffff;
-      outline: none;
-      caret-color: #22c55e;
-      padding: 0;
+      cursor: pointer;
       transition: all 0.15s ease;
     }
 
-    .cell:focus {
+    .cell.selected {
       background: #2b3547;
       border-color: #22c55e;
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.35);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.45);
     }
 
     .sum-box {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
       font-weight: 800;
       border-radius: 8px;
       border: 1.5px solid rgba(255, 255, 255, 0.06);
@@ -191,13 +193,13 @@
       gap: 5px;
     }
 
-    .grid-3-parent .row-sums .sum-box { width: 44px; height: 54px; font-size: 17px; }
-    .grid-3-parent .col-sums .sum-box { width: 54px; height: 42px; font-size: 17px; }
+    .grid-3-parent .row-sums .sum-box { width: 44px; height: 56px; font-size: 17px; }
+    .grid-3-parent .col-sums .sum-box { width: 56px; height: 42px; font-size: 17px; }
     .grid-3-parent .corner-diag { width: 44px; height: 42px; font-size: 17px; }
 
-    .grid-5-parent .row-sums .sum-box { width: 36px; height: 42px; font-size: 13px; }
-    .grid-5-parent .col-sums .sum-box { width: 42px; height: 34px; font-size: 13px; }
-    .grid-5-parent .corner-diag { width: 36px; height: 34px; font-size: 13px; }
+    .grid-5-parent .row-sums .sum-box { width: 38px; height: 44px; font-size: 13px; }
+    .grid-5-parent .col-sums .sum-box { width: 44px; height: 34px; font-size: 13px; }
+    .grid-5-parent .corner-diag { width: 38px; height: 34px; font-size: 13px; }
 
     .col-sums {
       display: flex;
@@ -205,49 +207,55 @@
       margin-left: 5px;
     }
 
-    /* Numbers Tracker Palette */
+    /* Expanded Number Palette */
     .hint-container {
-      margin-top: 12px;
+      margin-top: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       width: 100%;
     }
 
     .hint-label {
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       color: #94a3b8;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
     }
 
     .num-palette {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 6px;
       justify-content: center;
-      max-width: 320px;
+      max-width: 340px;
     }
 
+    /* Larger, comfortable tap targets */
     .num-chip {
-      width: 27px;
-      height: 27px;
-      border-radius: 6px;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
       background: #252d3d;
-      border: 1px solid #3b475d;
+      border: 1.5px solid #3b475d;
       color: #38bdf8;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.12s ease;
+    }
+
+    .num-chip:active {
+      transform: scale(0.93);
+      background: #334155;
     }
 
     .num-chip.used {
-      background: transparent;
+      background: rgba(37, 45, 61, 0.3);
       border-color: transparent;
       color: #4b5563;
       text-decoration: line-through;
@@ -258,18 +266,19 @@
     .controls {
       display: flex;
       gap: 8px;
-      margin-top: 12px;
+      margin-top: 14px;
       width: 100%;
     }
 
     button.btn-ctrl {
       flex: 1;
-      padding: 10px 0;
-      font-size: 13px;
+      padding: 11px 0;
+      font-size: 14px;
       font-weight: 700;
       border-radius: 10px;
       cursor: pointer;
       outline: none;
+      border: none;
     }
 
     .btn-reset {
@@ -279,10 +288,16 @@
     }
     .btn-reset:active { background: #2f394d; }
 
+    .btn-clear {
+      background: #3f1d24;
+      color: #f87171;
+      border: 1px solid rgba(248, 113, 113, 0.2);
+    }
+    .btn-clear:active { background: #4c1d27; }
+
     .btn-auto {
       background: #16a34a;
       color: #ffffff;
-      border: none;
       box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
     }
     .btn-auto:active { transform: translateY(1px); }
@@ -297,7 +312,7 @@
       <button class="mode-btn active" id="btn-mode-5" onclick="switchMode(5)">5 × 5 (65)</button>
     </div>
 
-    <!-- Target Display -->
+    <!-- Header Details -->
     <div class="header-bar">
       <div class="title-tag" id="mode-title">5 × 5 GRID</div>
       <div class="target-pill">
@@ -305,7 +320,7 @@
       </div>
     </div>
 
-    <!-- Board Layout Container -->
+    <!-- Board Layout -->
     <div class="board-layout grid-5-parent" id="board-container">
       <div class="row-align">
         <div class="grid grid-5" id="grid"></div>
@@ -318,14 +333,15 @@
       </div>
     </div>
 
-    <!-- Available Numbers Tracker -->
+    <!-- Number Selection Panel -->
     <div class="hint-container">
-      <div class="hint-label" id="palette-label">AVAILABLE (1 - 25):</div>
+      <div class="hint-label" id="palette-label">SELECT NUMBER (1 - 25):</div>
       <div class="num-palette" id="num-palette"></div>
     </div>
 
     <!-- Controls -->
     <div class="controls">
+      <button class="btn-ctrl btn-clear" onclick="clearSelected()">Erase</button>
       <button class="btn-ctrl btn-reset" onclick="resetAll()">Reset</button>
       <button class="btn-ctrl btn-auto" id="btn-auto-solve" onclick="autoSolve()">Auto Solve</button>
     </div>
@@ -338,13 +354,12 @@
       tg.expand();
     }
 
-    let N = 5; // Default starts at 5x5 as requested
+    let N = 5;
     let TARGET = 65;
     let cells = [];
     let chips = [];
     let activeIdx = 0;
 
-    // Siamese Method to generate standard magic squares for odd N (3 and 5)
     function generateMagicSquare(n) {
       const square = Array.from({ length: n }, () => Array(n).fill(0));
       let r = 0;
@@ -365,6 +380,13 @@
       return square.flat();
     }
 
+    function selectCell(idx) {
+      activeIdx = idx;
+      cells.forEach((cell, i) => {
+        cell.classList.toggle('selected', i === idx);
+      });
+    }
+
     function initBoard() {
       const gridEl = document.getElementById('grid');
       const rowSumsEl = document.getElementById('row-sums');
@@ -380,25 +402,34 @@
       TARGET = N === 3 ? 15 : 65;
       document.getElementById('target-val').textContent = TARGET;
       document.getElementById('mode-title').textContent = `${N} × ${N} GRID`;
-      document.getElementById('palette-label').textContent = `AVAILABLE (1 - ${N * N}):`;
+      document.getElementById('palette-label').textContent = `TAP NUMBER (1 - ${N * N}):`;
       document.getElementById('btn-auto-solve').textContent = `Auto ${TARGET}`;
 
       boardContainer.className = `board-layout grid-${N}-parent`;
       gridEl.className = `grid grid-${N}`;
 
-      // Create Grid Inputs
+      // Build DIV cells (Zero keyboard pops)
       cells = [];
       for (let i = 0; i < N * N; i++) {
-        const input = document.createElement('input');
-        input.className = 'cell';
-        input.type = 'text';
-        input.inputMode = 'numeric';
-        input.id = `c${i}`;
-        gridEl.appendChild(input);
-        cells.push(input);
+        const div = document.createElement('div');
+        div.className = 'cell';
+        div.id = `c${i}`;
+        div.textContent = '';
+
+        div.addEventListener('click', () => {
+          if (activeIdx === i && div.textContent !== '') {
+            // Tapping an already active filled cell clears it
+            clearSelected();
+          } else {
+            selectCell(i);
+          }
+        });
+
+        gridEl.appendChild(div);
+        cells.push(div);
       }
 
-      // Create Row and Column Sum indicators
+      // Build Row & Col Sum displays
       for (let i = 0; i < N; i++) {
         const rBox = document.createElement('div');
         rBox.className = 'sum-box';
@@ -413,7 +444,7 @@
         colSumsEl.appendChild(cBox);
       }
 
-      // Create Number Palette Chips
+      // Build Chips
       chips = [];
       for (let num = 1; num <= N * N; num++) {
         const chip = document.createElement('div');
@@ -424,33 +455,11 @@
         chips.push(chip);
 
         chip.addEventListener('click', () => {
-          const targetCellIdx = cells[activeIdx].value
-            ? (findNextEmptyCell(activeIdx) !== -1 ? findNextEmptyCell(activeIdx) : activeIdx)
-            : activeIdx;
-          handleDigit(targetCellIdx, num.toString());
+          placeNumber(num);
         });
       }
 
-      // Attach cell events
-      activeIdx = 0;
-      cells.forEach((cell, idx) => {
-        cell.addEventListener('focus', () => {
-          activeIdx = idx;
-          setTimeout(() => cell.select(), 10);
-        });
-
-        cell.addEventListener('input', (e) => {
-          handleDigit(idx, e.target.value);
-        });
-
-        cell.addEventListener('keydown', (e) => {
-          if (e.key === 'Backspace' && !cell.value) {
-            e.preventDefault();
-            findPreviousCell(idx);
-          }
-        });
-      });
-
+      selectCell(0);
       recalculate();
     }
 
@@ -465,50 +474,46 @@
     function findNextEmptyCell(currentIdx) {
       for (let offset = 1; offset <= N * N; offset++) {
         const next = (currentIdx + offset) % (N * N);
-        if (!cells[next].value) return next;
+        if (!cells[next].textContent) return next;
       }
       return -1;
     }
 
-    function findPreviousCell(currentIdx) {
-      const prev = (currentIdx - 1 + (N * N)) % (N * N);
-      cells[prev].focus();
-      cells[prev].value = '';
-      recalculate();
-    }
+    function placeNumber(num) {
+      const valStr = num.toString();
 
-    function handleDigit(idx, rawVal) {
-      const maxNum = N * N;
-      const numVal = parseInt(rawVal.replace(/\D/g, ''), 10);
-
-      if (!numVal || numVal < 1 || numVal > maxNum) {
-        cells[idx].value = '';
-        recalculate();
-        return;
-      }
-
-      const valStr = numVal.toString();
-
-      // Clear duplicate entry elsewhere
-      cells.forEach((c, i) => {
-        if (i !== idx && c.value === valStr) {
-          c.value = '';
+      // Clear duplicate if already used elsewhere
+      cells.forEach(c => {
+        if (c.textContent === valStr) {
+          c.textContent = '';
         }
       });
 
-      cells[idx].value = valStr;
+      // Place number in currently selected cell
+      cells[activeIdx].textContent = valStr;
+
+      if (tg?.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred('light');
+      }
+
       recalculate();
 
-      // Auto-jump to next open slot
-      const nextEmpty = findNextEmptyCell(idx);
+      // Jump to next unfilled cell
+      const nextEmpty = findNextEmptyCell(activeIdx);
       if (nextEmpty !== -1) {
-        cells[nextEmpty].focus();
-        cells[nextEmpty].select();
+        selectCell(nextEmpty);
+      }
+    }
+
+    function clearSelected() {
+      if (cells[activeIdx]) {
+        cells[activeIdx].textContent = '';
+        recalculate();
       }
     }
 
     function getValues() {
-      return cells.map(c => parseInt(c.value, 10) || 0);
+      return cells.map(c => parseInt(c.textContent, 10) || 0);
     }
 
     function setBoxState(id, sum) {
@@ -527,7 +532,7 @@
       let allRowsCorrect = true;
       let allColsCorrect = true;
 
-      // Check Rows
+      // Rows
       for (let r = 0; r < N; r++) {
         let rSum = 0;
         for (let c = 0; c < N; c++) rSum += v[r * N + c];
@@ -535,7 +540,7 @@
         if (rSum !== TARGET) allRowsCorrect = false;
       }
 
-      // Check Columns
+      // Columns
       for (let c = 0; c < N; c++) {
         let cSum = 0;
         for (let r = 0; r < N; r++) cSum += v[r * N + c];
@@ -543,16 +548,15 @@
         if (cSum !== TARGET) allColsCorrect = false;
       }
 
-      // Main Diagonal (\)
+      // Diagonals
       let d0 = 0;
       for (let i = 0; i < N; i++) d0 += v[i * N + i];
       setBoxState('diag0', d0);
 
-      // Anti-Diagonal (/)
       let d1 = 0;
       for (let i = 0; i < N; i++) d1 += v[i * N + (N - 1 - i)];
 
-      // Chip status update
+      // Chip usage sync
       const usedSet = new Set(v.filter(n => n >= 1 && n <= N * N));
       chips.forEach(chip => {
         const num = parseInt(chip.getAttribute('data-num'), 10);
@@ -563,7 +567,7 @@
         }
       });
 
-      // Win condition trigger
+      // Win Condition
       if (usedSet.size === N * N && allRowsCorrect && allColsCorrect && d0 === TARGET && d1 === TARGET) {
         if (tg?.HapticFeedback) {
           tg.HapticFeedback.notificationOccurred('success');
@@ -573,20 +577,20 @@
     }
 
     function resetAll() {
-      cells.forEach(c => c.value = '');
+      cells.forEach(c => c.textContent = '');
       recalculate();
-      if (cells[0]) cells[0].focus();
+      selectCell(0);
     }
 
     function autoSolve() {
       const solution = generateMagicSquare(N);
       solution.forEach((val, i) => {
-        if (cells[i]) cells[i].value = val;
+        if (cells[i]) cells[i].textContent = val;
       });
       recalculate();
     }
 
-    // Launch initial board (5x5, 65 target)
+    // Initialize on 5x5
     initBoard();
   </script>
 </body>
