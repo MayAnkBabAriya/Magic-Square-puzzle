@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Magic Square Puzzle</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
@@ -14,82 +14,95 @@
 
     body {
       margin: 0;
-      padding: calc(6px + env(safe-area-inset-top, 0px)) 
-               calc(8px + env(safe-area-inset-right, 0px)) 
-               calc(6px + env(safe-area-inset-bottom, 0px)) 
-               calc(8px + env(safe-area-inset-left, 0px));
+      padding: 10px 12px;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #0f131a;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      color: #ffffff;
-      overflow: hidden;
-    }
-
-    /* Main Container: Automatically adapts between Portrait and Landscape */
-    .game-card {
-      background: #1a202c;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 18px;
-      padding: 12px 14px;
-      display: flex;
-      flex-direction: column; /* Default portrait */
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
-      width: 100%;
-      max-width: 360px;
-      transition: all 0.25s ease;
-    }
-
-    /* Landscape mode switch */
-    @media (orientation: landscape), (min-width: 550px) {
-      .game-card {
-        flex-direction: row;
-        max-width: 600px;
-        gap: 18px;
-        padding: 12px 18px;
-      }
-
-      .controls-side {
-        width: 220px !important;
-        margin-top: 0 !important;
-      }
-    }
-
-    /* Left Side: Game Board */
-    .board-side {
       display: flex;
       flex-direction: column;
       align-items: center;
+      background: #0f131a;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #ffffff;
+    }
+
+    .game-card {
+      background: #1a202c;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 14px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+      width: 100%;
+      max-width: 345px;
+    }
+
+    /* Streamlined Title Badge */
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      width: 100%;
+    }
+
+    .title-tag {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #94a3b8;
+    }
+
+    .target-pill {
+      background: #142e1d;
+      border: 1.5px solid #22c55e;
+      color: #22c55e;
+      font-size: 16px;
+      font-weight: 800;
+      padding: 3px 12px;
+      border-radius: 20px;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+      display: flex;
+      align-items: center;
       gap: 5px;
+    }
+
+    .target-pill span {
+      color: #86efac;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .board-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .row-align {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 8px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(48px, 56px));
-      grid-gap: 5px;
+      grid-template-columns: repeat(3, 56px);
+      grid-gap: 6px;
       background: #12161f;
-      padding: 5px;
-      border-radius: 12px;
+      padding: 6px;
+      border-radius: 14px;
       border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .cell {
-      width: 100%;
-      aspect-ratio: 1 / 1;
+      width: 56px;
+      height: 56px;
       border: 1.5px solid #2d3748;
-      border-radius: 9px;
+      border-radius: 10px;
       background: #252d3d;
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
       text-align: center;
       color: #ffffff;
@@ -102,16 +115,16 @@
     .cell:focus {
       background: #2b3547;
       border-color: #22c55e;
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.35);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.35);
     }
 
     .sum-box {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 17px;
+      font-size: 19px;
       font-weight: 800;
-      border-radius: 9px;
+      border-radius: 10px;
       border: 1.5px solid rgba(255, 255, 255, 0.06);
       background: #252d3d;
       color: #718096;
@@ -122,79 +135,37 @@
       background: #16a34a;
       border-color: #4ade80;
       color: #ffffff;
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.45);
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.45);
     }
 
     .row-sums {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
     }
     .row-sums .sum-box {
-      width: 44px;
-      height: 52px;
+      width: 52px;
+      height: 56px;
     }
 
     .col-sums {
       display: flex;
-      gap: 5px;
-      margin-left: 5px;
+      gap: 6px;
+      margin-left: 6px;
     }
     .col-sums .sum-box {
-      width: 52px;
-      height: 42px;
+      width: 56px;
+      height: 48px;
     }
 
     .corner-diag {
-      width: 44px;
-      height: 42px;
+      width: 52px;
+      height: 48px;
     }
 
-    /* Controls & Numbers */
-    .controls-side {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      margin-top: 10px;
-      gap: 10px;
-    }
-
-    .header-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-    }
-
-    .title-tag {
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      color: #94a3b8;
-    }
-
-    .target-pill {
-      background: #142e1d;
-      border: 1.5px solid #22c55e;
-      color: #22c55e;
-      font-size: 14px;
-      font-weight: 800;
-      padding: 2px 10px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .target-pill span {
-      color: #86efac;
-      font-size: 10px;
-      font-weight: 600;
-    }
-
+    /* Numbers tracker */
     .hint-container {
+      margin-top: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -203,28 +174,26 @@
     }
 
     .hint-label {
-      font-size: 10px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 600;
       color: #94a3b8;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
     }
 
     .num-palette {
       display: flex;
-      flex-wrap: wrap;
       gap: 5px;
       justify-content: center;
-      max-width: 220px;
     }
 
     .num-chip {
-      width: 32px;
-      height: 32px;
-      border-radius: 7px;
+      width: 27px;
+      height: 27px;
+      border-radius: 6px;
       background: #252d3d;
       border: 1px solid #3b475d;
       color: #38bdf8;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -241,18 +210,20 @@
       pointer-events: none;
     }
 
+    /* Controls */
     .controls {
       display: flex;
-      gap: 8px;
+      gap: 10px;
+      margin-top: 14px;
       width: 100%;
     }
 
     button {
       flex: 1;
-      padding: 9px 0;
-      font-size: 13px;
+      padding: 11px 0;
+      font-size: 14px;
       font-weight: 700;
-      border-radius: 9px;
+      border-radius: 10px;
       cursor: pointer;
       outline: none;
     }
@@ -270,7 +241,7 @@
       background: #16a34a;
       color: #ffffff;
       border: none;
-      box-shadow: 0 4px 10px rgba(22, 163, 74, 0.35);
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
     }
     .btn-auto:active {
       transform: translateY(1px);
@@ -280,8 +251,16 @@
 <body>
 
   <div class="game-card">
-    <!-- Left Column: Grid and Sum boxes -->
-    <div class="board-side">
+    <!-- Clean, compact header -->
+    <div class="header-bar">
+      <div class="title-tag">3 × 3 GRID</div>
+      <div class="target-pill">
+        <span>SUM</span> 15
+      </div>
+    </div>
+
+    <div class="board-layout">
+      <!-- 3x3 Grid and Row Totals -->
       <div class="row-align">
         <div class="grid" id="grid">
           <input class="cell" type="text" inputmode="numeric" id="c0">
@@ -302,6 +281,7 @@
         </div>
       </div>
 
+      <!-- Column Totals and Diagonal Total -->
       <div class="row-align">
         <div class="col-sums">
           <div class="sum-box" id="col0">0</div>
@@ -312,73 +292,34 @@
       </div>
     </div>
 
-    <!-- Right Column: Info, Palette, & Controls -->
-    <div class="controls-side">
-      <div class="header-bar">
-        <div class="title-tag">MAGIC SQUARE</div>
-        <div class="target-pill">
-          <span>SUM</span> 15
-        </div>
+    <!-- Remaining Numbers Tracker -->
+    <div class="hint-container">
+      <div class="hint-label">AVAILABLE NUMBERS:</div>
+      <div class="num-palette">
+        <div class="num-chip" data-num="1">1</div>
+        <div class="num-chip" data-num="2">2</div>
+        <div class="num-chip" data-num="3">3</div>
+        <div class="num-chip" data-num="4">4</div>
+        <div class="num-chip" data-num="5">5</div>
+        <div class="num-chip" data-num="6">6</div>
+        <div class="num-chip" data-num="7">7</div>
+        <div class="num-chip" data-num="8">8</div>
+        <div class="num-chip" data-num="9">9</div>
       </div>
+    </div>
 
-      <div class="hint-container">
-        <div class="hint-label">TAP TO PLACE:</div>
-        <div class="num-palette">
-          <div class="num-chip" data-num="1">1</div>
-          <div class="num-chip" data-num="2">2</div>
-          <div class="num-chip" data-num="3">3</div>
-          <div class="num-chip" data-num="4">4</div>
-          <div class="num-chip" data-num="5">5</div>
-          <div class="num-chip" data-num="6">6</div>
-          <div class="num-chip" data-num="7">7</div>
-          <div class="num-chip" data-num="8">8</div>
-          <div class="num-chip" data-num="9">9</div>
-        </div>
-      </div>
-
-      <div class="controls">
-        <button class="btn-reset" onclick="resetAll()">Reset</button>
-        <button class="btn-auto" onclick="autoSolve()">Auto 15</button>
-      </div>
+    <!-- Buttons -->
+    <div class="controls">
+      <button class="btn-reset" onclick="resetAll()">Reset All</button>
+      <button class="btn-auto" onclick="autoSolve()">Auto 15</button>
     </div>
   </div>
 
   <script>
     const tg = window.Telegram?.WebApp;
-
-    function initTelegram() {
-      if (!tg) return;
-
+    if (tg) {
       tg.ready();
       tg.expand();
-
-      // Prevent accidental pull-down to close
-      if (typeof tg.disableVerticalSwipes === 'function') {
-        tg.disableVerticalSwipes();
-      }
-
-      // Allow free orientation rotating based on device sensor
-      if (typeof tg.unlockOrientation === 'function') {
-        tg.unlockOrientation();
-      }
-    }
-
-    initTelegram();
-
-    // Re-request fullscreen on first user touch gesture
-    document.addEventListener('pointerdown', () => {
-      if (tg && typeof tg.requestFullscreen === 'function' && !tg.isFullscreen) {
-        tg.requestFullscreen();
-      }
-    }, { once: true });
-
-    function triggerHaptic(type = 'impact', style = 'light') {
-      if (!tg?.HapticFeedback) return;
-      try {
-        if (type === 'impact') tg.HapticFeedback.impactOccurred(style);
-        else if (type === 'notification') tg.HapticFeedback.notificationOccurred(style);
-        else if (type === 'selection') tg.HapticFeedback.selectionChanged();
-      } catch (err) {}
     }
 
     const TARGET = 15;
@@ -389,7 +330,6 @@
     cells.forEach((cell, idx) => {
       cell.addEventListener('focus', () => {
         activeIdx = idx;
-        triggerHaptic('selection');
         setTimeout(() => cell.select(), 10);
       });
 
@@ -400,18 +340,20 @@
       cell.addEventListener('keydown', (e) => {
         if (e.key === 'Backspace' && !cell.value) {
           e.preventDefault();
-          triggerHaptic('impact', 'medium');
           findPreviousEmptyOrFilled(idx);
         }
       });
     });
 
     function findNextEmptyCell(currentIdx) {
+      // Find the next empty cell, skipping all already-filled ones
       for (let offset = 1; offset <= 9; offset++) {
         const next = (currentIdx + offset) % 9;
-        if (!cells[next].value) return next;
+        if (!cells[next].value) {
+          return next;
+        }
       }
-      return -1;
+      return -1; // All cells are filled
     }
 
     function findPreviousEmptyOrFilled(currentIdx) {
@@ -425,13 +367,13 @@
       const match = val.match(/[1-9]/g);
       if (!match || match.length === 0) {
         cells[idx].value = '';
-        triggerHaptic('impact', 'light');
         recalculate();
         return;
       }
 
       const digit = match[match.length - 1];
 
+      // Remove duplicate if entered elsewhere
       cells.forEach((otherCell, otherIdx) => {
         if (otherIdx !== idx && otherCell.value === digit) {
           otherCell.value = '';
@@ -439,9 +381,9 @@
       });
 
       cells[idx].value = digit;
-      triggerHaptic('impact', 'light');
       recalculate();
 
+      // Skip filled boxes and navigate to the next empty box
       const nextEmpty = findNextEmptyCell(idx);
       if (nextEmpty !== -1) {
         cells[nextEmpty].focus();
@@ -449,11 +391,11 @@
       }
     }
 
+    // Tapping a remaining chip drops it into the active or next empty box
     chips.forEach(chip => {
       chip.addEventListener('click', () => {
         const num = chip.getAttribute('data-num');
         const targetCellIdx = cells[activeIdx].value ? (findNextEmptyCell(activeIdx) !== -1 ? findNextEmptyCell(activeIdx) : activeIdx) : activeIdx;
-        triggerHaptic('impact', 'light');
         handleDigit(targetCellIdx, num);
       });
     });
@@ -465,13 +407,17 @@
     function setBoxState(id, sum) {
       const el = document.getElementById(id);
       el.textContent = sum;
-      if (sum === TARGET) el.classList.add('matched');
-      else el.classList.remove('matched');
+      if (sum === TARGET) {
+        el.classList.add('matched');
+      } else {
+        el.classList.remove('matched');
+      }
     }
 
     function recalculate() {
       const v = getValues();
 
+      // Rows
       const r0 = v[0] + v[1] + v[2];
       const r1 = v[3] + v[4] + v[5];
       const r2 = v[6] + v[7] + v[8];
@@ -479,6 +425,7 @@
       setBoxState('row1', r1);
       setBoxState('row2', r2);
 
+      // Columns
       const c0 = v[0] + v[3] + v[6];
       const c1 = v[1] + v[4] + v[7];
       const c2 = v[2] + v[5] + v[8];
@@ -486,35 +433,41 @@
       setBoxState('col1', c1);
       setBoxState('col2', c2);
 
+      // Diagonals
       const d0 = v[0] + v[4] + v[8];
       const d1 = v[2] + v[4] + v[6];
       setBoxState('diag0', d0);
 
+      // Update palette of remaining numbers
       const usedSet = new Set(v.filter(n => n >= 1 && n <= 9));
       chips.forEach(chip => {
         const num = parseInt(chip.getAttribute('data-num'), 10);
-        if (usedSet.has(num)) chip.classList.add('used');
-        else chip.classList.remove('used');
+        if (usedSet.has(num)) {
+          chip.classList.add('used');
+        } else {
+          chip.classList.remove('used');
+        }
       });
 
+      // Strict win condition
       if (usedSet.size === 9 &&
           r0 === 15 && r1 === 15 && r2 === 15 &&
           c0 === 15 && c1 === 15 && c2 === 15 &&
           d0 === 15 && d1 === 15) {
-        triggerHaptic('notification', 'success');
-        setTimeout(() => alert('🎉 Congratulations! You solved the 15 Magic Square!'), 100);
+        if (tg?.HapticFeedback) {
+          tg.HapticFeedback.notificationOccurred('success');
+        }
+        setTimeout(() => alert('🎉 Congratulations! You solved the 15 Magic Square!'), 80);
       }
     }
 
     function resetAll() {
-      triggerHaptic('impact', 'medium');
       cells.forEach(c => c.value = '');
       recalculate();
       cells[0].focus();
     }
 
     function autoSolve() {
-      triggerHaptic('notification', 'success');
       const solution = [8, 1, 6, 3, 5, 7, 4, 9, 2];
       solution.forEach((val, i) => cells[i].value = val);
       recalculate();
