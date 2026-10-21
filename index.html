@@ -39,7 +39,78 @@
       max-width: 360px;
     }
 
-    /* Mode switcher */
+    /* Player Profile Bar */
+    .player-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: #12161f;
+      padding: 6px 10px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+
+    .player-edit-btn {
+      background: #252d3d;
+      color: #94a3b8;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Stats & Timer Bar */
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 8px;
+      gap: 4px;
+    }
+
+    .stat-pill {
+      flex: 1;
+      background: #12161f;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 4px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-pill .lbl {
+      font-size: 9px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.3px;
+    }
+
+    .stat-pill .val {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-pill.timer-box .val {
+      color: #4ade80;
+    }
+
+    /* Switch Groups */
     .switch-group {
       display: flex;
       gap: 6px;
@@ -88,11 +159,11 @@
       justify-content: space-between;
       width: 100%;
       padding: 0 4px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .title-tag {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 800;
       letter-spacing: 0.8px;
       color: #94a3b8;
@@ -102,7 +173,7 @@
       background: #142e1d;
       border: 1.5px solid #22c55e;
       color: #22c55e;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       padding: 2px 10px;
       border-radius: 16px;
@@ -140,7 +211,6 @@
       border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    /* Dynamic sizing for 3x3 and 5x5 */
     .grid.grid-3 {
       grid-template-columns: repeat(3, 56px);
     }
@@ -159,7 +229,6 @@
       font-size: 18px;
     }
 
-    /* Non-input custom cells */
     .cell {
       display: flex;
       align-items: center;
@@ -218,9 +287,8 @@
       margin-left: 5px;
     }
 
-    /* Expanded Number Palette */
     .hint-container {
-      margin-top: 14px;
+      margin-top: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -278,18 +346,17 @@
       box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
     }
 
-    /* Controls */
     .controls {
       display: flex;
       gap: 8px;
-      margin-top: 14px;
+      margin-top: 12px;
       width: 100%;
     }
 
     button.btn-ctrl {
       flex: 1;
-      padding: 11px 0;
-      font-size: 14px;
+      padding: 10px 0;
+      font-size: 13px;
       font-weight: 700;
       border-radius: 10px;
       cursor: pointer;
@@ -317,26 +384,124 @@
       box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
     }
     .btn-auto:active { transform: translateY(1px); }
+
+    /* Name Entry Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 999;
+    }
+
+    .modal-card {
+      background: #1a202c;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      padding: 20px;
+      width: 100%;
+      max-width: 310px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .modal-input {
+      width: 100%;
+      background: #12161f;
+      border: 1.5px solid #3b475d;
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 10px 12px;
+      text-align: center;
+      outline: none;
+    }
+
+    .modal-input:focus {
+      border-color: #38bdf8;
+    }
+
+    .modal-btn {
+      width: 100%;
+      background: #0284c7;
+      color: #ffffff;
+      border: none;
+      padding: 12px 0;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
+  <!-- Name Entry Prompt Modal -->
+  <div class="modal-backdrop" id="nameModal">
+    <div class="modal-card">
+      <div class="modal-title">Enter Your Name</div>
+      <input type="text" class="modal-input" id="playerNameInput" placeholder="Player Name" maxlength="15" autocomplete="off">
+      <button class="modal-btn" onclick="savePlayerName()">Start Game</button>
+    </div>
+  </div>
+
   <div class="game-card">
+    <!-- Active Player Header -->
+    <div class="player-bar">
+      <div class="player-info">
+        <span>👤</span>
+        <span id="playerDisplay">Guest</span>
+      </div>
+      <button class="player-edit-btn" onclick="openNameModal()">Change</button>
+    </div>
+
+    <!-- Live Timer & Saved Record Dashboard -->
+    <div class="stats-bar">
+      <div class="stat-pill timer-box">
+        <span class="lbl">TIMER</span>
+        <span class="val" id="timeDisplay">00:00</span>
+      </div>
+      <div class="stat-pill">
+        <span class="lbl">YOUR BEST</span>
+        <span class="val" id="userBestDisplay">--:--</span>
+      </div>
+      <div class="stat-pill">
+        <span class="lbl">OVERALL BEST</span>
+        <span class="val" id="overallBestDisplay">--:--</span>
+      </div>
+    </div>
+
+    <!-- Switchers -->
     <div class="switch-group">
-      <!-- Grid Dimension Switcher -->
       <div class="pill-switch">
         <button class="toggle-btn" id="btn-size-3" onclick="switchGridSize(3)">3 × 3</button>
         <button class="toggle-btn active" id="btn-size-5" onclick="switchGridSize(5)">5 × 5</button>
       </div>
 
-      <!-- Placement Mode Switcher -->
       <div class="pill-switch">
         <button class="toggle-btn active" id="btn-mode-manual" onclick="setInputMode('manual')">Manual</button>
         <button class="toggle-btn auto-mode" id="btn-mode-auto" onclick="setInputMode('auto')">Auto Place</button>
       </div>
     </div>
 
-    <!-- Header Details -->
+    <!-- Target Sum Pill -->
     <div class="header-bar">
       <div class="title-tag" id="mode-title">5 × 5 GRID</div>
       <div class="target-pill">
@@ -359,7 +524,7 @@
 
     <!-- Number Selection Panel -->
     <div class="hint-container">
-      <div class="hint-label" id="palette-label">SELECT NUMBER (1 - 25):</div>
+      <div class="hint-label" id="palette-label">TAP NUMBER (1 - 25):</div>
       <div class="num-palette" id="num-palette"></div>
     </div>
 
@@ -380,10 +545,123 @@
 
     let N = 5;
     let TARGET = 65;
-    let inputMode = 'manual'; // 'manual' or 'auto'
+    let inputMode = 'manual';
     let cells = [];
     let chips = [];
     let activeIdx = 0;
+
+    // Timer & Record State
+    let currentPlayer = 'Guest';
+    let timerInterval = null;
+    let timerRunning = false;
+    let timerStartTime = 0;
+    let elapsedSeconds = 0;
+
+    function formatTime(totalSeconds) {
+      if (totalSeconds === null || totalSeconds === undefined || totalSeconds === Infinity) return '--:--';
+      const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+      const s = (totalSeconds % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function startTimerIfNeeded() {
+      if (!timerRunning) {
+        timerRunning = true;
+        timerStartTime = Date.now() - (elapsedSeconds * 1000);
+        timerInterval = setInterval(() => {
+          elapsedSeconds = Math.floor((Date.now() - timerStartTime) / 1000);
+          document.getElementById('timeDisplay').textContent = formatTime(elapsedSeconds);
+        }, 1000);
+      }
+    }
+
+    function stopTimer() {
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+      }
+    }
+
+    function resetTimer() {
+      stopTimer();
+      elapsedSeconds = 0;
+      document.getElementById('timeDisplay').textContent = '00:00';
+    }
+
+    // Local Storage Helpers
+    function getStoredRecords() {
+      try {
+        return JSON.parse(localStorage.getItem('magic_square_records')) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveRecord(seconds) {
+      const records = getStoredRecords();
+      const modeKey = `${N}x${N}`;
+      if (!records[modeKey]) {
+        records[modeKey] = { overallBest: null, players: {} };
+      }
+
+      // Check overall best
+      const currentOverall = records[modeKey].overallBest;
+      if (!currentOverall || seconds < currentOverall.time) {
+        records[modeKey].overallBest = { player: currentPlayer, time: seconds };
+      }
+
+      // Check player best
+      const currentPersonal = records[modeKey].players[currentPlayer];
+      if (!currentPersonal || seconds < currentPersonal) {
+        records[modeKey].players[currentPlayer] = seconds;
+      }
+
+      localStorage.setItem('magic_square_records', JSON.stringify(records));
+      updateLeaderboardDisplays();
+    }
+
+    function updateLeaderboardDisplays() {
+      const records = getStoredRecords();
+      const modeKey = `${N}x${N}`;
+      const modeData = records[modeKey] || { overallBest: null, players: {} };
+
+      // User best
+      const userBest = modeData.players ? modeData.players[currentPlayer] : null;
+      document.getElementById('userBestDisplay').textContent = userBest !== undefined && userBest !== null ? formatTime(userBest) : '--:--';
+
+      // Overall best
+      if (modeData.overallBest) {
+        document.getElementById('overallBestDisplay').textContent = `${formatTime(modeData.overallBest.time)} (${modeData.overallBest.player})`;
+      } else {
+        document.getElementById('overallBestDisplay').textContent = '--:--';
+      }
+    }
+
+    function openNameModal() {
+      document.getElementById('playerNameInput').value = currentPlayer !== 'Guest' ? currentPlayer : '';
+      document.getElementById('nameModal').style.display = 'flex';
+      setTimeout(() => document.getElementById('playerNameInput').focus(), 150);
+    }
+
+    function savePlayerName() {
+      const input = document.getElementById('playerNameInput').value.trim();
+      currentPlayer = input.length > 0 ? input : 'Guest';
+      localStorage.setItem('magic_square_current_player', currentPlayer);
+      document.getElementById('playerDisplay').textContent = currentPlayer;
+      document.getElementById('nameModal').style.display = 'none';
+      updateLeaderboardDisplays();
+    }
+
+    function loadInitialPlayer() {
+      const saved = localStorage.getItem('magic_square_current_player');
+      if (saved) {
+        currentPlayer = saved;
+        document.getElementById('playerDisplay').textContent = currentPlayer;
+        document.getElementById('nameModal').style.display = 'none';
+      } else {
+        openNameModal();
+      }
+    }
 
     function generateMagicSquare(n) {
       const square = Array.from({ length: n }, () => Array(n).fill(0));
@@ -416,9 +694,7 @@
       const v = getValues();
       const usedSet = new Set(v.filter(n => n >= 1 && n <= N * N));
       for (let num = 1; num <= N * N; num++) {
-        if (!usedSet.has(num)) {
-          return num;
-        }
+        if (!usedSet.has(num)) return num;
       }
       return null;
     }
@@ -461,7 +737,6 @@
       boardContainer.className = `board-layout grid-${N}-parent`;
       gridEl.className = `grid grid-${N}`;
 
-      // Build DIV cells
       cells = [];
       for (let i = 0; i < N * N; i++) {
         const div = document.createElement('div');
@@ -473,21 +748,19 @@
           if (inputMode === 'auto') {
             selectCell(i);
             if (div.textContent !== '') {
-              // Tap on filled cell in auto mode erases it
               div.textContent = '';
               if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
               recalculate();
             } else {
-              // Tap on empty cell places the next available sequential number
               const nextNum = getNextPendingNumber();
               if (nextNum !== null) {
+                startTimerIfNeeded();
                 div.textContent = nextNum.toString();
                 if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
                 recalculate();
               }
             }
           } else {
-            // Manual Mode Behavior
             if (activeIdx === i && div.textContent !== '') {
               clearSelected();
             } else {
@@ -500,7 +773,6 @@
         cells.push(div);
       }
 
-      // Build Row & Col Sum displays
       for (let i = 0; i < N; i++) {
         const rBox = document.createElement('div');
         rBox.className = 'sum-box';
@@ -515,7 +787,6 @@
         colSumsEl.appendChild(cBox);
       }
 
-      // Build Number Chips
       chips = [];
       for (let num = 1; num <= N * N; num++) {
         const chip = document.createElement('div');
@@ -526,16 +797,13 @@
         chips.push(chip);
 
         chip.addEventListener('click', () => {
-          if (inputMode === 'manual') {
-            placeNumber(num);
-          } else {
-            // If in auto mode, tapping a chip selects that cell or switches to that number
-            placeNumber(num);
-          }
+          placeNumber(num);
         });
       }
 
       selectCell(0);
+      resetTimer();
+      updateLeaderboardDisplays();
       recalculate();
     }
 
@@ -556,6 +824,7 @@
     }
 
     function placeNumber(num) {
+      startTimerIfNeeded();
       const valStr = num.toString();
 
       cells.forEach(c => {
@@ -605,7 +874,6 @@
       let allRowsCorrect = true;
       let allColsCorrect = true;
 
-      // Rows
       for (let r = 0; r < N; r++) {
         let rSum = 0;
         for (let c = 0; c < N; c++) rSum += v[r * N + c];
@@ -613,7 +881,6 @@
         if (rSum !== TARGET) allRowsCorrect = false;
       }
 
-      // Columns
       for (let c = 0; c < N; c++) {
         let cSum = 0;
         for (let r = 0; r < N; r++) cSum += v[r * N + c];
@@ -621,7 +888,6 @@
         if (cSum !== TARGET) allColsCorrect = false;
       }
 
-      // Diagonals
       let d0 = 0;
       for (let i = 0; i < N; i++) d0 += v[i * N + i];
       setBoxState('diag0', d0);
@@ -629,7 +895,6 @@
       let d1 = 0;
       for (let i = 0; i < N; i++) d1 += v[i * N + (N - 1 - i)];
 
-      // Chip usage sync & highlight next auto number
       const usedSet = new Set(v.filter(n => n >= 1 && n <= N * N));
       const nextPending = getNextPendingNumber();
 
@@ -650,20 +915,29 @@
 
       // Win Condition
       if (usedSet.size === N * N && allRowsCorrect && allColsCorrect && d0 === TARGET && d1 === TARGET) {
+        stopTimer();
+        const finishTime = elapsedSeconds;
+        saveRecord(finishTime);
+
         if (tg?.HapticFeedback) {
           tg.HapticFeedback.notificationOccurred('success');
         }
-        setTimeout(() => alert(`🎉 Congratulations! You solved the ${TARGET} Magic Square!`), 80);
+
+        setTimeout(() => {
+          alert(`🎉 Outstanding, ${currentPlayer}!\nYou completed the ${N}x${N} puzzle in ${formatTime(finishTime)}!`);
+        }, 80);
       }
     }
 
     function resetAll() {
       cells.forEach(c => c.textContent = '');
+      resetTimer();
       recalculate();
       selectCell(0);
     }
 
     function autoSolve() {
+      stopTimer();
       const solution = generateMagicSquare(N);
       solution.forEach((val, i) => {
         if (cells[i]) cells[i].textContent = val;
@@ -671,7 +945,9 @@
       recalculate();
     }
 
+    // Startup flow
     initBoard();
+    loadInitialPlayer();
   </script>
 </body>
 </html>
