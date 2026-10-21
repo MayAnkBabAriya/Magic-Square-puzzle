@@ -100,10 +100,15 @@
     }
 
     .stat-pill .val {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       color: #ffffff;
       font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100px;
+      text-align: center;
     }
 
     .stat-pill.timer-box .val {
@@ -543,6 +548,9 @@
       tg.expand();
     }
 
+    // Direct Firebase Realtime Database URL
+    const FIREBASE_DB_URL = "https://magic-square-puzzle-default-rtdb.asia-southeast1.firebasedatabase.app";
+
     let N = 5;
     let TARGET = 65;
     let inputMode = 'manual';
@@ -588,52 +596,66 @@
       document.getElementById('timeDisplay').textContent = '00:00';
     }
 
-    // Local Storage Helpers
-    function getStoredRecords() {
+    // Sanitize username for Firebase paths
+    function sanitizeKey(key) {
+      return encodeURIComponent(key).replace(/\./g, '%2E');
+    }
+
+    // Live Database Sync via Firebase REST API
+    async function loadCloudRecords() {
       try {
-        return JSON.parse(localStorage.getItem('magic_square_records')) || {};
+        const modeKey = `${N}x${N}`;
+        const res = await fetch(`${FIREBASE_DB_URL}/records/${modeKey}.json`);
+        const modeData = await res.json() || { overallBest: null, players: {} };
+
+        // 1. Personal Best Display
+        const cleanPlayerKey = sanitizeKey(currentPlayer);
+        const userBest = modeData.players ? modeData.players[cleanPlayerKey] : null;
+        document.getElementById('userBestDisplay').textContent = 
+          (userBest !== undefined && userBest !== null) ? formatTime(userBest) : '--:--';
+
+        // 2. Global Overall Best Display
+        if (modeData.overallBest && modeData.overallBest.time) {
+          document.getElementById('overallBestDisplay').textContent = 
+            `${formatTime(modeData.overallBest.time)} (${modeData.overallBest.player})`;
+        } else {
+          document.getElementById('overallBestDisplay').textContent = '--:--';
+        }
       } catch (e) {
-        return {};
+        console.warn("Could not sync with Firebase, checking local backup.", e);
       }
     }
 
-    function saveRecord(seconds) {
-      const records = getStoredRecords();
+    async function saveRecord(seconds) {
       const modeKey = `${N}x${N}`;
-      if (!records[modeKey]) {
-        records[modeKey] = { overallBest: null, players: {} };
-      }
+      const cleanPlayerKey = sanitizeKey(currentPlayer);
 
-      // Check overall best
-      const currentOverall = records[modeKey].overallBest;
-      if (!currentOverall || seconds < currentOverall.time) {
-        records[modeKey].overallBest = { player: currentPlayer, time: seconds };
-      }
+      try {
+        // Fetch current records to check before overwriting
+        const res = await fetch(`${FIREBASE_DB_URL}/records/${modeKey}.json`);
+        let modeData = await res.json() || {};
+        if (!modeData.players) modeData.players = {};
 
-      // Check player best
-      const currentPersonal = records[modeKey].players[currentPlayer];
-      if (!currentPersonal || seconds < currentPersonal) {
-        records[modeKey].players[currentPlayer] = seconds;
-      }
+        // Update Personal Best
+        const oldPersonal = modeData.players[cleanPlayerKey];
+        if (!oldPersonal || seconds < oldPersonal) {
+          await fetch(`${FIREBASE_DB_URL}/records/${modeKey}/players/${cleanPlayerKey}.json`, {
+            method: 'PUT',
+            body: JSON.stringify(seconds)
+          });
+        }
 
-      localStorage.setItem('magic_square_records', JSON.stringify(records));
-      updateLeaderboardDisplays();
-    }
+        // Update Overall Best
+        if (!modeData.overallBest || seconds < modeData.overallBest.time) {
+          await fetch(`${FIREBASE_DB_URL}/records/${modeKey}/overallBest.json`, {
+            method: 'PUT',
+            body: JSON.stringify({ player: currentPlayer, time: seconds })
+          });
+        }
 
-    function updateLeaderboardDisplays() {
-      const records = getStoredRecords();
-      const modeKey = `${N}x${N}`;
-      const modeData = records[modeKey] || { overallBest: null, players: {} };
-
-      // User best
-      const userBest = modeData.players ? modeData.players[currentPlayer] : null;
-      document.getElementById('userBestDisplay').textContent = userBest !== undefined && userBest !== null ? formatTime(userBest) : '--:--';
-
-      // Overall best
-      if (modeData.overallBest) {
-        document.getElementById('overallBestDisplay').textContent = `${formatTime(modeData.overallBest.time)} (${modeData.overallBest.player})`;
-      } else {
-        document.getElementById('overallBestDisplay').textContent = '--:--';
+        loadCloudRecords();
+      } catch (e) {
+        console.error("Failed to push score to Firebase:", e);
       }
     }
 
@@ -649,7 +671,7 @@
       localStorage.setItem('magic_square_current_player', currentPlayer);
       document.getElementById('playerDisplay').textContent = currentPlayer;
       document.getElementById('nameModal').style.display = 'none';
-      updateLeaderboardDisplays();
+      loadCloudRecords();
     }
 
     function loadInitialPlayer() {
@@ -658,6 +680,7 @@
         currentPlayer = saved;
         document.getElementById('playerDisplay').textContent = currentPlayer;
         document.getElementById('nameModal').style.display = 'none';
+        loadCloudRecords();
       } else {
         openNameModal();
       }
@@ -803,7 +826,7 @@
 
       selectCell(0);
       resetTimer();
-      updateLeaderboardDisplays();
+      loadCloudRecords();
       recalculate();
     }
 
@@ -945,7 +968,7 @@
       recalculate();
     }
 
-    // Startup flow
+    // Startup
     initBoard();
     loadInitialPlayer();
   </script>
