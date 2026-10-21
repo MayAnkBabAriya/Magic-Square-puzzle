@@ -40,21 +40,27 @@
     }
 
     /* Mode switcher */
-    .mode-switch {
+    .switch-group {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .pill-switch {
+      flex: 1;
       display: flex;
       background: #12161f;
       padding: 3px;
       border-radius: 12px;
-      gap: 4px;
-      margin-bottom: 12px;
-      width: 100%;
-      max-width: 230px;
+      gap: 3px;
     }
 
-    .mode-btn {
+    .toggle-btn {
       flex: 1;
-      padding: 7px 0;
-      font-size: 13px;
+      padding: 6px 0;
+      font-size: 12px;
       font-weight: 700;
       border: none;
       border-radius: 9px;
@@ -62,12 +68,17 @@
       color: #94a3b8;
       cursor: pointer;
       transition: all 0.2s ease;
+      text-align: center;
     }
 
-    .mode-btn.active {
+    .toggle-btn.active {
       background: #252d3d;
       color: #38bdf8;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .toggle-btn.active.auto-mode {
+      color: #4ade80;
     }
 
     /* Header Bar */
@@ -232,7 +243,6 @@
       max-width: 340px;
     }
 
-    /* Larger, comfortable tap targets */
     .num-chip {
       width: 38px;
       height: 38px;
@@ -260,6 +270,12 @@
       color: #4b5563;
       text-decoration: line-through;
       pointer-events: none;
+    }
+
+    .num-chip.next-auto {
+      border-color: #22c55e;
+      color: #86efac;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
     }
 
     /* Controls */
@@ -306,10 +322,18 @@
 <body>
 
   <div class="game-card">
-    <!-- Mode Switcher -->
-    <div class="mode-switch">
-      <button class="mode-btn" id="btn-mode-3" onclick="switchMode(3)">3 × 3 (15)</button>
-      <button class="mode-btn active" id="btn-mode-5" onclick="switchMode(5)">5 × 5 (65)</button>
+    <div class="switch-group">
+      <!-- Grid Dimension Switcher -->
+      <div class="pill-switch">
+        <button class="toggle-btn" id="btn-size-3" onclick="switchGridSize(3)">3 × 3</button>
+        <button class="toggle-btn active" id="btn-size-5" onclick="switchGridSize(5)">5 × 5</button>
+      </div>
+
+      <!-- Placement Mode Switcher -->
+      <div class="pill-switch">
+        <button class="toggle-btn active" id="btn-mode-manual" onclick="setInputMode('manual')">Manual</button>
+        <button class="toggle-btn auto-mode" id="btn-mode-auto" onclick="setInputMode('auto')">Auto Place</button>
+      </div>
     </div>
 
     <!-- Header Details -->
@@ -356,6 +380,7 @@
 
     let N = 5;
     let TARGET = 65;
+    let inputMode = 'manual'; // 'manual' or 'auto'
     let cells = [];
     let chips = [];
     let activeIdx = 0;
@@ -387,6 +412,35 @@
       });
     }
 
+    function getNextPendingNumber() {
+      const v = getValues();
+      const usedSet = new Set(v.filter(n => n >= 1 && n <= N * N));
+      for (let num = 1; num <= N * N; num++) {
+        if (!usedSet.has(num)) {
+          return num;
+        }
+      }
+      return null;
+    }
+
+    function setInputMode(mode) {
+      inputMode = mode;
+      document.getElementById('btn-mode-manual').classList.toggle('active', mode === 'manual');
+      document.getElementById('btn-mode-auto').classList.toggle('active', mode === 'auto');
+      updatePaletteLabel();
+      recalculate();
+    }
+
+    function updatePaletteLabel() {
+      const label = document.getElementById('palette-label');
+      if (inputMode === 'auto') {
+        const nextNum = getNextPendingNumber();
+        label.textContent = nextNum ? `AUTO NEXT: ${nextNum} (TAP ANY BOX)` : 'ALL NUMBERS PLACED';
+      } else {
+        label.textContent = `MANUAL: TAP NUMBER (1 - ${N * N})`;
+      }
+    }
+
     function initBoard() {
       const gridEl = document.getElementById('grid');
       const rowSumsEl = document.getElementById('row-sums');
@@ -402,13 +456,12 @@
       TARGET = N === 3 ? 15 : 65;
       document.getElementById('target-val').textContent = TARGET;
       document.getElementById('mode-title').textContent = `${N} × ${N} GRID`;
-      document.getElementById('palette-label').textContent = `TAP NUMBER (1 - ${N * N}):`;
       document.getElementById('btn-auto-solve').textContent = `Auto ${TARGET}`;
 
       boardContainer.className = `board-layout grid-${N}-parent`;
       gridEl.className = `grid grid-${N}`;
 
-      // Build DIV cells (Zero keyboard pops)
+      // Build DIV cells
       cells = [];
       for (let i = 0; i < N * N; i++) {
         const div = document.createElement('div');
@@ -417,11 +470,29 @@
         div.textContent = '';
 
         div.addEventListener('click', () => {
-          if (activeIdx === i && div.textContent !== '') {
-            // Tapping an already active filled cell clears it
-            clearSelected();
-          } else {
+          if (inputMode === 'auto') {
             selectCell(i);
+            if (div.textContent !== '') {
+              // Tap on filled cell in auto mode erases it
+              div.textContent = '';
+              if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+              recalculate();
+            } else {
+              // Tap on empty cell places the next available sequential number
+              const nextNum = getNextPendingNumber();
+              if (nextNum !== null) {
+                div.textContent = nextNum.toString();
+                if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+                recalculate();
+              }
+            }
+          } else {
+            // Manual Mode Behavior
+            if (activeIdx === i && div.textContent !== '') {
+              clearSelected();
+            } else {
+              selectCell(i);
+            }
           }
         });
 
@@ -444,7 +515,7 @@
         colSumsEl.appendChild(cBox);
       }
 
-      // Build Chips
+      // Build Number Chips
       chips = [];
       for (let num = 1; num <= N * N; num++) {
         const chip = document.createElement('div');
@@ -455,7 +526,12 @@
         chips.push(chip);
 
         chip.addEventListener('click', () => {
-          placeNumber(num);
+          if (inputMode === 'manual') {
+            placeNumber(num);
+          } else {
+            // If in auto mode, tapping a chip selects that cell or switches to that number
+            placeNumber(num);
+          }
         });
       }
 
@@ -463,11 +539,11 @@
       recalculate();
     }
 
-    function switchMode(newN) {
+    function switchGridSize(newN) {
       if (N === newN) return;
       N = newN;
-      document.getElementById('btn-mode-3').classList.toggle('active', N === 3);
-      document.getElementById('btn-mode-5').classList.toggle('active', N === 5);
+      document.getElementById('btn-size-3').classList.toggle('active', N === 3);
+      document.getElementById('btn-size-5').classList.toggle('active', N === 5);
       initBoard();
     }
 
@@ -482,14 +558,12 @@
     function placeNumber(num) {
       const valStr = num.toString();
 
-      // Clear duplicate if already used elsewhere
       cells.forEach(c => {
         if (c.textContent === valStr) {
           c.textContent = '';
         }
       });
 
-      // Place number in currently selected cell
       cells[activeIdx].textContent = valStr;
 
       if (tg?.HapticFeedback) {
@@ -498,7 +572,6 @@
 
       recalculate();
 
-      // Jump to next unfilled cell
       const nextEmpty = findNextEmptyCell(activeIdx);
       if (nextEmpty !== -1) {
         selectCell(nextEmpty);
@@ -556,16 +629,24 @@
       let d1 = 0;
       for (let i = 0; i < N; i++) d1 += v[i * N + (N - 1 - i)];
 
-      // Chip usage sync
+      // Chip usage sync & highlight next auto number
       const usedSet = new Set(v.filter(n => n >= 1 && n <= N * N));
+      const nextPending = getNextPendingNumber();
+
       chips.forEach(chip => {
         const num = parseInt(chip.getAttribute('data-num'), 10);
+        chip.classList.remove('next-auto');
         if (usedSet.has(num)) {
           chip.classList.add('used');
         } else {
           chip.classList.remove('used');
+          if (inputMode === 'auto' && num === nextPending) {
+            chip.classList.add('next-auto');
+          }
         }
       });
+
+      updatePaletteLabel();
 
       // Win Condition
       if (usedSet.size === N * N && allRowsCorrect && allColsCorrect && d0 === TARGET && d1 === TARGET) {
@@ -590,7 +671,6 @@
       recalculate();
     }
 
-    // Initialize on 5x5
     initBoard();
   </script>
 </body>
